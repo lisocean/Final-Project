@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="toolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">#fff</item><!--设置背景颜色的-->
+        <item name="android:titleTextColor" tools:targetApi="m">#fff</item>
+        <item name="android:textColorPrimary">#312E2E</item><!--设置文字颜色的-->
+        <item name="android:textSize">16sp</item><!--设置文字大小的-->
+        <item name="android:paddingRight">-5dp</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuTheme</item><!--设置弹出位置的主题-->
+    </style>
+
+    <style name="OverflowMenuTheme" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item><!--这个属性设置为false，就能使得popup在Toolbar的下面显示-->
+    </style>
+
+</resources>
