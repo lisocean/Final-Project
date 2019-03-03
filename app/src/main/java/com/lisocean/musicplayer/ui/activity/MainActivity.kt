@@ -89,12 +89,10 @@ class MainActivity : AppCompatActivity() {
                 searchView = item.actionView as SearchView
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        toast(query ?: "2e1312")
                         return true
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        println("dasdsadasdasdadasd")
                         return true
                     }
 
