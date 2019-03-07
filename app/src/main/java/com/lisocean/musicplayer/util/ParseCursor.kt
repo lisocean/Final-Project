@@ -1,9 +1,8 @@
 package com.lisocean.musicplayer.util
 
 import android.database.Cursor
-import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media as S
-import com.lisocean.musicplayer.model.AudioMediaBean
+import com.lisocean.musicplayer.model.data.AudioMediaBean
 
 
 @JvmName("ParseCursor")
@@ -12,8 +11,10 @@ import com.lisocean.musicplayer.model.AudioMediaBean
  */
 fun getAudioMediaBean(cursor: Cursor?): AudioMediaBean {
     val audioMediaBean =
-        AudioMediaBean("","", 0, "", "",
-            0,"","",0,"",0)
+        AudioMediaBean(
+            "", "", 0, "", "",
+            0, "", "", 0, "", 0
+        )
     return audioMediaBean.apply {
         cursor?.let {
             id = it.getString(it.getColumnIndex(S._ID))

@@ -1,9 +1,7 @@
-package com.lisocean.musicplayer.model
+package com.lisocean.musicplayer.model.data
 
-import android.database.Cursor
 import android.os.Parcel
 import android.os.Parcelable
-import android.provider.MediaStore
 
 /**
  *

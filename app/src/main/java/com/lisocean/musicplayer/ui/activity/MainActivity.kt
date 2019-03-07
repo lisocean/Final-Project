@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import com.lisocean.musicplayer.R
-import com.lisocean.musicplayer.model.AudioMediaBean
+import com.lisocean.musicplayer.model.data.AudioMediaBean
 import com.lisocean.musicplayer.ui.adapter.LmPagerAdapter
 import com.lisocean.musicplayer.util.parseCursor
 import kotlinx.android.synthetic.main.activity_main.*

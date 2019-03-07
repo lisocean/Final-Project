@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import com.lisocean.musicplayer.R
-import com.lisocean.musicplayer.model.AudioMediaBean
+import com.lisocean.musicplayer.model.data.AudioMediaBean
 import kotlinx.android.synthetic.main.item_singlemusic.view.*
 import org.jetbrains.anko.toast
 
