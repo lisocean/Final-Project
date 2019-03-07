@@ -1,9 +1,9 @@
-package com.lisocean.musicplayer.ui.adapter
+package com.lisocean.musicplayer.ui.localmusic.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.lisocean.musicplayer.model.data.AudioMediaBean
+import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 import com.lisocean.musicplayer.widget.SingleMusicItemView
 
 class SingleMusicAdapter(private val list : List<AudioMediaBean>?) : RecyclerView.Adapter<SingleMusicAdapter.ViewHolder>() {

@@ -1,4 +1,4 @@
 package com.lisocean.musicplayer.model.repository
 
-class MvClass {
+class MvSearchRepo {
 }

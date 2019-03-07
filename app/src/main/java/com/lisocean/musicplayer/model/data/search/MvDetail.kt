@@ -42,9 +42,9 @@ class MvDetail {
          * publishTime : 1997-10-01
          * brs : {"240":"http://vodkgeyttp8.vod.126.net/cloudmusic/MjQ3NDQ3MjUw/89a6a279dc2acfcd068b45ce72b1f560/bf2750483ed02d4c6263dffefa5959d7.mp4?wsSecret=9a18d8fafe043303e0e78c3d7ef3e96b&wsTime=1551948287","480":"http://vodkgeyttp8.vod.126.net/cloudmusic/MjQ3NDQ3MjUw/89a6a279dc2acfcd068b45ce72b1f560/533e4183a709699d566180ed0cd9abe9.mp4?wsSecret=c352c384f431eec3f51428e69f54c395&wsTime=1551948287"}
          * artists : [{"id":8926,"name":"莫文蔚"},{"id":6481,"name":"张洪量"}]
-         * isReward : false
-         * commentThreadId : R_MV_5_5436712
-         */
+        * isReward : false
+        * commentThreadId : R_MV_5_5436712
+        */
 
         var id: Int = 0
         var name: String? = null
@@ -77,6 +77,10 @@ class MvDetail {
             var `_$240`: String? = null
             @SerializedName("480")
             var `_$480`: String? = null
+            @SerializedName("720")
+            var `_$720`: String? = null
+            @SerializedName("1080")
+            var `_$1080`: String? = null
         }
 
         class ArtistsBean {

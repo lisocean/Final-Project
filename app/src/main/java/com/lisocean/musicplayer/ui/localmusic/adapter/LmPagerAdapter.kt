@@ -1,11 +1,11 @@
-package com.lisocean.musicplayer.ui.adapter
+package com.lisocean.musicplayer.ui.localmusic.adapter
 
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.lisocean.musicplayer.ui.fragment.DefaultFragment
-import com.lisocean.musicplayer.ui.fragment.SingleMusicFragment
+import com.lisocean.musicplayer.ui.DefaultFragment
+import com.lisocean.musicplayer.ui.localmusic.SingleMusicFragment
 
 class LmPagerAdapter (val context : Context?, fm: FragmentManager? = null) : FragmentPagerAdapter(fm) {
     private val fragmentMap by lazy {

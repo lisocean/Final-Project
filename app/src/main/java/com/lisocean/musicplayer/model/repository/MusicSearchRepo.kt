@@ -1,15 +1,15 @@
 package com.lisocean.musicplayer.model.repository
 
+import com.lisocean.musicplayer.model.local.CpDatabase
 import com.lisocean.musicplayer.model.remote.MusicService
-import java.lang.Exception
 
 /**
  * remote music of net
  * local music from room
  * TODO() =>
  */
-class MusicRepository(private val remote : MusicService, private val local : MusicService) {
+class MusicSearchRepo(private val remote : MusicService, private val local : CpDatabase) {
     init {
-        throw Exception("local music not by dao")
+        throw Throwable("local music not by dao")
     }
 }

@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.base
+package com.lisocean.musicplayer.ui.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

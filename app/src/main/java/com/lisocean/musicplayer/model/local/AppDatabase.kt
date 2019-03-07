@@ -1,10 +1,7 @@
 package com.lisocean.musicplayer.model.local
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.room.*
 import android.content.Context
-import android.provider.MediaStore
-import com.lisocean.musicplayer.model.data.AudioMediaBean
 import com.lisocean.musicplayer.util.Constants
 
 // @Database(entities =  [AudioMediaBean::class], version = 1)

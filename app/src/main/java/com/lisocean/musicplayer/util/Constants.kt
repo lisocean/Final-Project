@@ -12,4 +12,8 @@ object Constants {
     val HOST_REPLACE_API = "https://music.163.com/song/media/outer/url?id="
 
     const val  DB_NAME : String = "musicplayer.db"
+
+    const val  MUSIC_ID : String = "musicidtokeep"
+
+    const val MUSIC_PLAYER_MODE : String = "musicplayermode"
 }

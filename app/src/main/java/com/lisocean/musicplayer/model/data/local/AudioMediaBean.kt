@@ -1,11 +1,11 @@
-package com.lisocean.musicplayer.model.data
+package com.lisocean.musicplayer.model.data.local
 
 import android.os.Parcel
 import android.os.Parcelable
 
 /**
  *
-MediaStore.Audio.Media._ID,           歌曲id         String            188788
+MediaStore.Audio.Media._ID,           歌曲id         Int               188788
 MediaStore.Audio.Media.DATA,          歌曲路径      String              /storage/emulated/0/netease/cloudmusic/Music/锦零 - 有何不可（Cover 许嵩）.mp3
 MediaStore.Audio.Media.SIZE,          歌曲大小     Long                 9796891
 MediaStore.Audio.Media.DISPLAY_NAME,  完整歌名字    String              锦零 - 有何不可（Cover 许嵩）.mp3
@@ -18,12 +18,12 @@ MediaStore.Audio.Media.MIME_TYPE,     歌曲播放品质  String              au
 MediaStore.Audio.Media.ARTIST_ID      歌手的id 排序使用   Long            43
  */
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-data class AudioMediaBean(var id : String, var data : String, var size : Long,
+data class AudioMediaBean(var id : Int, var data : String, var size : Long,
                           var display_name : String, var artist : String, var duration : Long,
                           var title : String, var album : String, var album_id : Long,
                           var mime_type : String, var artist_id: Long) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
+        parcel.readInt(),
         parcel.readString(),
         parcel.readLong(),
         parcel.readString(),
@@ -37,7 +37,7 @@ data class AudioMediaBean(var id : String, var data : String, var size : Long,
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
+        parcel.writeInt(id)
         parcel.writeString(data)
         parcel.writeLong(size)
         parcel.writeString(display_name)
