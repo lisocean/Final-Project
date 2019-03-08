@@ -9,10 +9,10 @@ import com.lisocean.musicplayer.ui.localmusic.SingleMusicFragment
 
 class LmPagerAdapter (val context : Context?, fm: FragmentManager? = null) : FragmentPagerAdapter(fm) {
     private val fragmentMap by lazy {
-        mapOf(0 to ("单曲" to SingleMusicFragment()),
-              1 to ("歌手" to DefaultFragment()),
-              2 to ("专辑" to DefaultFragment()),
-              3 to ("文件夹" to DefaultFragment()))
+        mapOf(0 to ("Single" to SingleMusicFragment()),
+              1 to ("Singer" to DefaultFragment()),
+              2 to ("Album" to DefaultFragment()),
+              3 to ("Folder" to DefaultFragment()))
     }
     override fun getPageTitle(position: Int): CharSequence? {
         return fragmentMap[position]?.first

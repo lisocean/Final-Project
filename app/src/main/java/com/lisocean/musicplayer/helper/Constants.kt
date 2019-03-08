@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.util
+package com.lisocean.musicplayer.helper
 
 object Constants {
     val HOST_API = "https://music.aityp.com/"

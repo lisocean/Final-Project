@@ -2,7 +2,7 @@ package com.lisocean.musicplayer.model.local
 
 import android.arch.persistence.room.*
 import android.content.Context
-import com.lisocean.musicplayer.util.Constants
+import com.lisocean.musicplayer.helper.Constants
 
 // @Database(entities =  [AudioMediaBean::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

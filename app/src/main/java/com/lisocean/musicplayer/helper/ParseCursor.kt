@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.util
+package com.lisocean.musicplayer.helper
 
 import android.database.Cursor
 import android.provider.MediaStore.Audio.Media as S

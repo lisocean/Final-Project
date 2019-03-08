@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
+import com.lisocean.musicplayer.BR
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMainBinding
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.adapter.LmPagerAdapter
-import com.lisocean.musicplayer.util.Constants
-import com.lisocean.musicplayer.util.argument
+import com.lisocean.musicplayer.helper.Constants
+import com.lisocean.musicplayer.helper.argument
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.getViewModel
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
      */
     private val musicId by argument<Int>(Constants.MUSIC_ID)
 
-    private val mViewModel by viewModel<LocalMusicViewModel> { parametersOf(musicId) }
+    private val mViewModel by viewModel<LocalMusicViewModel>()
 
     private val mBinding by lazy {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
@@ -37,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //binding data
         mBinding.vm = mViewModel
-        getViewModel<LocalMusicViewModel>()
-        mViewModel.loadData()
 
         setSupportActionBar(toolbar)
         val adapter = LmPagerAdapter(this, supportFragmentManager)
@@ -69,8 +68,11 @@ class MainActivity : AppCompatActivity() {
 
                 })
             }
-            R.id.menu_other -> toast("其他")
-            R.id.menu_cycling -> toast("扫描本地音乐")
+            R.id.menu_other -> toast("other")
+            R.id.menu_cycling -> {
+                mViewModel.loadData()
+                toast("Loaded successfully")
+            }
         }
         return true
     }
