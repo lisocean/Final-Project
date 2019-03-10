@@ -11,9 +11,11 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:largeHeap="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.localmusic.MainActivity">
+        <activity android:name=".ui.localmusic.MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -22,6 +24,10 @@
 
             </intent-filter>
         </activity>
+        <activity android:name=".ui.search.SearchActivity"
+                  android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustPan"/>
+
         <service android:name=".service.AudioService" tools:ignore="InnerclassSeparator"/>
     </application>
 

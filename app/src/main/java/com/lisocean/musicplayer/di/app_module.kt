@@ -6,6 +6,8 @@ import com.lisocean.musicplayer.model.remote.MvService
 import com.lisocean.musicplayer.model.repository.LocalMusicRepo
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.helper.Constants
+import com.lisocean.musicplayer.model.repository.MusicSearchRepo
+import com.lisocean.musicplayer.ui.search.SearchViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -15,10 +17,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val viewModelModule =  module{
     viewModel {LocalMusicViewModel(get()) }
+    viewModel { SearchViewModel(get()) }
 }
 
 val repoModule =  module{
     single { LocalMusicRepo(get()) }
+    single { MusicSearchRepo(get()) }
 }
 
 val localModule =  module{

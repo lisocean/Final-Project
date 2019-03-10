@@ -12,6 +12,8 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
@@ -28,10 +30,14 @@ import com.lisocean.musicplayer.service.AudioService
 import com.lisocean.musicplayer.service.Iservice
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.presenter.Presenter
+import com.lisocean.musicplayer.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.find
+import org.jetbrains.anko.findOptional
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.getViewModel
@@ -53,9 +59,8 @@ class MainActivity : AppCompatActivity(), Presenter{
     private val mBinding by lazy {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
-    private var serviceState = false
     private val conn by lazy { AudioConnection() }
-    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //binding data
@@ -98,7 +103,8 @@ class MainActivity : AppCompatActivity(), Presenter{
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_search -> {
-
+                val options =  ActivityOptionsCompat.makeSceneTransitionAnimation(this, iv_search, getString(R.string.search_transition_name))
+                startActivity(Intent(this, SearchActivity::class.java), options.toBundle())
             }
             R.id.menu_other -> {
                 toast("other")

@@ -8,7 +8,7 @@ import com.lisocean.musicplayer.model.remote.MusicService
  * local music from room
  * TODO() =>
  */
-class MusicSearchRepo(private val remote : MusicService, private val local : CpDatabase) {
+class MusicSearchRepo(private val remote : MusicService) {
     /**
      * get search result
      */
