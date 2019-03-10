@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import com.lisocean.musicplayer.BR
-import com.lisocean.musicplayer.helper.presenter.ItemClickPresenter
+import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.base.adapter.animators.ItemAnimator
 import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
 import com.lisocean.musicplayer.ui.base.adapter.decorator.ItemDecorator
 
-abstract class BaseViewAdapter<T>(context: Context, private val list: ObservableList<T>) : RecyclerView.Adapter<BindingViewHolder<ViewDataBinding>>() {
+abstract class BaseViewAdapter<T>(val context: Context, private val list: ObservableList<T>) : RecyclerView.Adapter<BindingViewHolder<ViewDataBinding>>() {
 
     protected val mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -21,7 +21,10 @@ abstract class BaseViewAdapter<T>(context: Context, private val list: Observable
 
     var itemDecorator: ItemDecorator? = null
 
-    var itemAnimator: ItemAnimator? = ScaleInItemAnimator(interpolator = DecelerateInterpolator())
+    private var itemAnimator: ItemAnimator? = ScaleInItemAnimator(interpolator = DecelerateInterpolator())
+
+    private var onBindLisenter : ((v : View, item : T)->Unit)? = null
+
 
     var mLastPosition = -1
     var isFirstOnly = false
@@ -32,9 +35,8 @@ abstract class BaseViewAdapter<T>(context: Context, private val list: Observable
         holder.binding.setVariable(BR.item, item)
         holder.binding.setVariable(BR.presenter, itemPresenter)
         holder.binding.executePendingBindings()
-
         itemDecorator?.decorator(holder, position, getItemViewType(position))
-
+        onBindLisenter?.invoke(holder.binding.root, item)
         itemAnimator?.let {
             if (!showItemAnimator) {
                 return@let
@@ -70,5 +72,8 @@ abstract class BaseViewAdapter<T>(context: Context, private val list: Observable
         v.pivotX = v.measuredWidth.toFloat() / 2
         v.pivotY = v.measuredHeight.toFloat() / 2
         v.animate().setInterpolator(null).startDelay = 0
+    }
+    fun  onBindItem(block : (v : View, item : T)->Unit){
+        this.onBindLisenter = block
     }
 }

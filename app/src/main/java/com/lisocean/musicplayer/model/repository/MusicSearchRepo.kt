@@ -9,7 +9,9 @@ import com.lisocean.musicplayer.model.remote.MusicService
  * TODO() =>
  */
 class MusicSearchRepo(private val remote : MusicService, private val local : CpDatabase) {
-    init {
-        throw Throwable("local music not by dao")
-    }
+    /**
+     * get search result
+     */
+    fun getSearchResult(string: String) = remote.getMusicByKeyWords(string)
+
 }

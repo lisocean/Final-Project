@@ -13,7 +13,11 @@ object Constants {
 
     const val  DB_NAME : String = "musicplayer.db"
 
+    const val CONFIG_INFO : String = "configstate"
+
     const val  MUSIC_ID : String = "musicidtokeep"
 
     const val MUSIC_PLAYER_MODE : String = "musicplayermode"
+
+
 }

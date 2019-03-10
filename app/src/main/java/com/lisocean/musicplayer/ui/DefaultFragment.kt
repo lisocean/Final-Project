@@ -9,9 +9,6 @@ import com.lisocean.musicplayer.R
 
 class DefaultFragment :Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return View.inflate(context, R.layout.fragment_, null).apply { setData() }
-    }
-    fun setData(){
-
+        return View.inflate(context, R.layout.fragment_, null).apply {  }
     }
 }

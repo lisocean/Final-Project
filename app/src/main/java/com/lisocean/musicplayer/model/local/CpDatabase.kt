@@ -16,26 +16,30 @@ class CpDatabase private constructor(private val context: Context){
      */
     private val observable =  object : Single<List<AudioMediaBean>>(){
         override fun subscribeActual(observer: SingleObserver<in List<AudioMediaBean>>) {
-            val cursor =
-                context.applicationContext.contentResolver.query(
-                    M.EXTERNAL_CONTENT_URI,
-                    arrayOf(
-                        M._ID,
-                        M.DATA,
-                        M.SIZE,
-                        M.DISPLAY_NAME,
-                        M.ARTIST,
-                        M.DURATION,
-                        M.TITLE,
-                        M.ALBUM,
-                        M.ALBUM_ID,
-                        M.MIME_TYPE,
-                        M.ARTIST_ID),
-                    null, null, null)
-            val musicOfList = cursor.parse()
-            cursor?.close()
-
-            observer.onSuccess(musicOfList)
+            try{
+                val cursor =
+                    context.applicationContext.contentResolver.query(
+                        M.EXTERNAL_CONTENT_URI,
+                        arrayOf(
+                            M._ID,
+                            M.DATA,
+                            M.SIZE,
+                            M.DISPLAY_NAME,
+                            M.ARTIST,
+                            M.DURATION,
+                            M.TITLE,
+                            M.ALBUM,
+                            M.ALBUM_ID,
+                            M.MIME_TYPE,
+                            M.ARTIST_ID),
+                        null, null, null)
+                val musicOfList = cursor.parse()
+                cursor?.close()
+                observer.onSuccess(musicOfList)
+            }
+            catch (e : Throwable){
+                println(e)
+            }
         }
 
     }

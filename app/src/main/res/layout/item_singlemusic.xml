@@ -4,7 +4,7 @@
         <variable name="item"
                   type="com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel"/>
         <variable name="presenter"
-                  type="com.lisocean.musicplayer.helper.presenter.ItemClickPresenter"/>
+                  type="com.lisocean.musicplayer.ui.presenter.ItemClickPresenter"/>
     </data>
     <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -39,7 +39,7 @@
                             android:id="@+id/textOfSong"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                            android:text="@{item.display_name}"
+                            android:text="@{item.title}"
                             android:textColor="#B3000000"
                             android:layout_marginBottom="3dp"
                             android:layout_marginTop="7dp"

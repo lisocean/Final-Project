@@ -10,12 +10,13 @@ import org.jetbrains.anko.support.v4.defaultSharedPreferences
  *  获取参数配置信息
  *  get parameter configuration information
  */
-inline fun <reified T : Any> FragmentActivity.argument(key : String) =
+inline fun <reified T : Any> Context.argument(key : String) =
     lazy {
-        getSharedPreferences("confgigstate", Context.MODE_PRIVATE)
+        getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         .getString(key,"") as T }
+
 inline fun <reified T :Any> Fragment.argument(key: String) = lazy {
-    context?.getSharedPreferences("confgigstate", Context.MODE_PRIVATE)
+    context?.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         ?.getString(key  , "") as T
 }
 
@@ -23,7 +24,7 @@ inline fun <reified T :Any> Fragment.argument(key: String) = lazy {
  * set parameter configuration information
  */
 fun View.setArgument(key: String, data : String){
-    context.getSharedPreferences("confgigstate", Context.MODE_PRIVATE)
+    context.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         .edit()
         .putString(key, data)
         .apply()

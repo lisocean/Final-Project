@@ -1,5 +1,7 @@
 package com.lisocean.musicplayer.ui.localmusic.viewmodel
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 
 /**
@@ -22,9 +24,11 @@ var display_name : String, var artist : String, var duration : Long,
 var title : String, var album : String, var album_id : Long,
 var mime_type : String, var artist_id: Long
  */
-class MusicItemViewModel(i : Int ,val local : AudioMediaBean) {
+class MusicItemViewModel(i : Int ,val local : AudioMediaBean)  {
+
+
     val index = (i + 1).toString()
-    val id = -1
+    val id = local.id
     val data = local.data
     val size = local.size
     val display_name = local.display_name
@@ -33,4 +37,5 @@ class MusicItemViewModel(i : Int ,val local : AudioMediaBean) {
     val album = local.album
     val title = local.title
     val artist = local.artist
+    val isSelected = false
 }
