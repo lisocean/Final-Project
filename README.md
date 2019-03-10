@@ -13,7 +13,11 @@ This is a music player using the MVVM(view--viewmodel--model), Network Api comes
 * ViewModel
 * Gson
 * Dachshund-Tab-Layout
+* EventBus
 
+## Reference : Ui effect
+* [PaoNet](https://github.com/ditclear/PaoNet) -> RecyclerView's Base Activity
+* [KotlinMvp](https://github.com/git-xuhao/KotlinMvp) -> Search Activity Transition Animation
 ## TODO => Apply : 
 * Ijkplayer
 * Glide
