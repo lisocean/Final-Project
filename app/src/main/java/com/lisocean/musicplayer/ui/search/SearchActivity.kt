@@ -7,36 +7,57 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionInflater
+import android.view.KeyEvent
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivitySearchBinding
 import com.lisocean.musicplayer.extension.MultipleStatusView
 import com.lisocean.musicplayer.helper.CleanLeakUtils
+import com.lisocean.musicplayer.helper.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
+import com.lisocean.musicplayer.helper.argument
+import com.lisocean.musicplayer.model.data.search.MusicList
+import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
+import com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel
+import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.search.dependencies.SearchContract
 import com.lisocean.musicplayer.ui.search.dependencies.ViewAnimUtils
+import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity(),  SearchContract.View {
+class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPresenter<MusicList.ResultBean.SongsBean> {
+    override fun onItemClick(v: View?, item: MusicList.ResultBean.SongsBean) {
+
+    }
 
     /**
      * 多种状态的 View 的切换
      */
     protected var mLayoutStatusView: MultipleStatusView? = null
-
     private val mViewModel by viewModel<SearchViewModel>()
     private val mBinding by lazy {
         DataBindingUtil.setContentView<ActivitySearchBinding>(this, R.layout.activity_search)
+    }
+
+    private val mAdapter by lazy {
+        SingleTypeAdapter<MusicList.ResultBean.SongsBean>(
+            this,
+            R.layout.item_searchresult,
+            mViewModel.songs).apply {
+            itemPresenter = this@SearchActivity
+            this.onBindItem { v :View , item  ->}
+        }
     }
     open val mRetryClickListener: View.OnClickListener = View.OnClickListener {
         start()
@@ -51,6 +72,26 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View {
         tv_cancel.setOnClickListener { onBackPressed() }
 
 
+        et_search_view.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    closeSoftKeyboard()
+                    if (mViewModel.text.get().isNullOrEmpty()) {
+                        toast("Help you find music")
+                    } else {
+                        start()
+                    }
+                }
+                return false
+            }
+
+        })
+        mRecyclerView_result.apply {
+            layoutManager =LinearLayoutManager(this@SearchActivity)
+            adapter = mAdapter
+
+        }
+
         mLayoutStatusView = multipleStatusView
 
         //状态栏透明和间距处理
@@ -58,30 +99,43 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View {
         StatusBarUtil.setPaddingSmart(this, toolbar)
 
     }
-    override fun setHotWordData(string: ArrayList<String>) {
 
+    fun start(){
+        setSearchResult()
+        mViewModel.text.get()?.let {
+            mViewModel.search(it)
+        }
     }
-    fun start(){}
 
     override fun setSearchResult() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        hideHotWordView()
+        tv_search_count.visibility = View.VISIBLE
     }
 
     override fun closeSoftKeyboard() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        closeKeyBord(et_search_view, applicationContext)
     }
 
 
+    /**
+     * 设置热门关键词
+     */
+    override fun setHotWordData(string: ArrayList<String>) {}
     override fun showError(errorMsg: String, errorCode: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        toast(errorMsg)
+        if (errorCode == ErrorStatus.NETWORK_ERROR) {
+            mLayoutStatusView?.showNoNetwork()
+        } else {
+            mLayoutStatusView?.showError()
+        }
     }
 
     override fun showLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mLayoutStatusView?.showLoading()
     }
 
     override fun dismissLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mLayoutStatusView?.showContent()
     }
     /**
      * 没有找到相匹配的内容
@@ -178,13 +232,8 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View {
             this, rel_frame,
             fab_circle.width / 2, R.color.backgroundColor,
             object : ViewAnimUtils.OnRevealAnimationListener {
-                override fun onRevealHide() {
-
-                }
-
-                override fun onRevealShow() {
-                    setUpView()
-                }
+                override fun onRevealHide() {}
+                override fun onRevealShow() = setUpView()
             })
     }
 

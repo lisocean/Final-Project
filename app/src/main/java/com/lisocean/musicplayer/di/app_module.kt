@@ -7,7 +7,7 @@ import com.lisocean.musicplayer.model.repository.LocalMusicRepo
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.helper.Constants
 import com.lisocean.musicplayer.model.repository.MusicSearchRepo
-import com.lisocean.musicplayer.ui.search.SearchViewModel
+import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module

@@ -26,7 +26,6 @@ object ViewAnimUtils {
     }
 
 
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun animateRevealShow(
             context: Context, view: View,
