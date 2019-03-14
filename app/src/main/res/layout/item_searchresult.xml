@@ -2,7 +2,7 @@
 <layout>
     <data>
         <variable name="item"
-                  type="com.lisocean.musicplayer.model.data.search.MusicList.ResultBean.SongsBean"/>
+                  type="com.lisocean.musicplayer.model.data.local.SongInfo"/>
         <variable name="presenter"
                   type="com.lisocean.musicplayer.ui.presenter.ItemClickPresenter"/>
     </data>
@@ -11,17 +11,13 @@
             xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:backgroundTint="@color/backgroundColor"
             android:onClick="@{(v)->presenter.onItemClick(v,item)}"
             android:background="@drawable/itemtouch_bg">
-        <TextView
-                android:id="@+id/textOfIndex"
-                android:layout_width="50dp"
-                android:text="10"
-                android:singleLine="true"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                tools:text="10"/>
+
+        <LinearLayout
+                android:layout_width="10dp"
+               android:layout_height="match_parent"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -45,26 +41,17 @@
                             android:layout_marginTop="7dp"
                             android:textSize="17sp"
                             tools:text="爱的双重魔力"/>
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                        <ImageView
-                                android:background="@drawable/sq_icon"
-                                android:layout_width="21dp"
-                                android:layout_height="14dp"
-                                android:layout_marginTop="8dp"/>
-                        <TextView
-                                android:id="@+id/textOfArtist"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="5dp"
-                                android:text="@{item.name}"
-                                android:gravity="fill_vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="16dp"
-                                tools:text="B2-成人礼"/>
 
-                    </LinearLayout>
+
+                    <TextView
+                            android:id="@+id/textOfArtist"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="5dp"
+                            android:text="@{item.artists}"
+                            android:gravity="fill_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            tools:text="B2-成人礼"/>
 
                 </LinearLayout>
 

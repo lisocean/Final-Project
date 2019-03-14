@@ -6,6 +6,7 @@ import com.lisocean.musicplayer.model.remote.MvService
 import com.lisocean.musicplayer.model.repository.LocalMusicRepo
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.helper.Constants
+import com.lisocean.musicplayer.model.local.AppDatabase
 import com.lisocean.musicplayer.model.repository.MusicSearchRepo
 import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -26,8 +27,11 @@ val repoModule =  module{
 }
 
 val localModule =  module{
-//    single { AppDatabase.getInstance(androidApplication()) }
+
     single { CpDatabase.getInstance(androidApplication()) }
+    single { AppDatabase.getInstance(androidApplication()) }
+
+    single { get<AppDatabase>().songInfoDao() }
 }
 
 val remoteModule = module {

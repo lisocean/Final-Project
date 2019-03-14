@@ -120,6 +120,7 @@ class MusicList {
                 var img1v1: Int = 0
                 var trans: Any? = null
                 var alias: List<*>? = null
+
             }
         }
     }

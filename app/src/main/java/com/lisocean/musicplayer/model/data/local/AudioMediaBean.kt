@@ -34,6 +34,7 @@ data class AudioMediaBean(var id : Int, var data : String, var size : Long,
         parcel.readLong(),
         parcel.readString(),
         parcel.readLong()
+
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

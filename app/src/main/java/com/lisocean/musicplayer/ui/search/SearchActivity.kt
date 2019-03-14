@@ -24,6 +24,7 @@ import com.lisocean.musicplayer.helper.CleanLeakUtils
 import com.lisocean.musicplayer.helper.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.helper.argument
+import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.data.search.MusicList
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel
@@ -36,8 +37,8 @@ import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPresenter<MusicList.ResultBean.SongsBean> {
-    override fun onItemClick(v: View?, item: MusicList.ResultBean.SongsBean) {
+class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPresenter<SongInfo> {
+    override fun onItemClick(v: View?, item: SongInfo) {
 
     }
 
@@ -51,12 +52,12 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     }
 
     private val mAdapter by lazy {
-        SingleTypeAdapter<MusicList.ResultBean.SongsBean>(
+        SingleTypeAdapter<SongInfo>(
             this,
             R.layout.item_searchresult,
             mViewModel.songs).apply {
             itemPresenter = this@SearchActivity
-            this.onBindItem { v :View , item  ->}
+
         }
     }
     open val mRetryClickListener: View.OnClickListener = View.OnClickListener {
@@ -66,6 +67,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding.vm = mViewModel
+
         mLayoutStatusView?.setOnClickListener(mRetryClickListener)
         setUpEnterAnimation() // 入场动画
         setUpExitAnimation() // 退场动画
@@ -101,15 +103,21 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     }
 
     fun start(){
+        showLoading()
         setSearchResult()
         mViewModel.text.get()?.let {
-            mViewModel.search(it)
+            mViewModel.search(it){error ->
+                dismissLoading()
+                error?.let {trueError->
+                    showError(trueError.message ?: "", -1)
+                }
+            }
         }
     }
 
     override fun setSearchResult() {
         hideHotWordView()
-        tv_search_count.visibility = View.VISIBLE
+
     }
 
     override fun closeSoftKeyboard() {
@@ -143,7 +151,6 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     override fun setEmptyView() {
         toast("抱歉，没有找到相匹配的内容")
         hideHotWordView()
-        tv_search_count.visibility = View.GONE
         mLayoutStatusView?.showEmpty()
     }
     /**
