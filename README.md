@@ -14,11 +14,21 @@ This is a music player using the MVVM(view--viewmodel--model), Network Api comes
 * Gson
 * Dachshund-Tab-Layout
 * EventBus
+* Glide
+* Flexbox
 
 ## Reference : Ui effect
 * [PaoNet](https://github.com/ditclear/PaoNet) -> RecyclerView's Base Activity
 * [KotlinMvp](https://github.com/git-xuhao/KotlinMvp) -> Search Activity Transition Animation
+
 ## TODO => Apply : 
 * Ijkplayer
-* Glide
+
 * And so on
+
+## Local Load Strategy
+Content Providers, App DataBase(playTime >= 60s)to get local music. 
+Synchronize of database is search online resources to adapter local Content Providers' Music and add it to local App database.
+
+![demo](display/demo1.jpg)
+![demo](display/demo2.jpg)

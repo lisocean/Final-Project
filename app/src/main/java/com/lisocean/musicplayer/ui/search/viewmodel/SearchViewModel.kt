@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.collections.forEachWithIndex
 
 class SearchViewModel(private val repo : MusicSearchRepo) : ViewModel() {
-
+    val searchHot  = ObservableArrayList<String>()
     val songs = ObservableArrayList<SongInfo>()
     val position = ObservableInt()
     val text = ObservableField<String>()
@@ -21,6 +21,24 @@ class SearchViewModel(private val repo : MusicSearchRepo) : ViewModel() {
      * @param keyWork some thing to search
      * @param block when get the  result, callback some view function
      */
+    init {
+
+        getSearchHot()
+    }
+    @SuppressLint("CheckResult")
+    fun getSearchHot(){
+        try{
+            repo.getHotSearch()
+                .subscribe { t1, _ ->
+                    t1?.let {
+                        it.result?.hots?.forEach {hot ->
+                            searchHot.add(hot.first)
+                        }
+                    }
+                }
+        }catch (e : Throwable) {}
+
+    }
     @SuppressLint("CheckResult")
     fun search(keyWork :String, block : ((error : Throwable?)->Unit)? = null): Boolean {
         var CheckResult = true

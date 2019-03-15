@@ -26,10 +26,11 @@ class MusicSearchRepo(private val remote : MusicService) {
         return remote.getSongByIds(str)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
     }
 
-
+    fun getHotSearch() = remote.getHotSearch()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
     fun getLyricById(id : Int) = remote.getLyricById(id)
 
     fun getSongByIds(ids : List<Int>) =
@@ -42,7 +43,6 @@ class MusicSearchRepo(private val remote : MusicService) {
                 }
                 return@flatMap Single.just(list.toList())
             }
-
     @SuppressLint("CheckResult")
     private fun getSearchIds(string: String, offset : Int = 0) =
         remote.getMusicByKeyWords(string,offset)

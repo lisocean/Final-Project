@@ -90,7 +90,7 @@ class MusicList {
                     var name: String? = null
                     var picUrl: Any? = null
                     var albumSize: Int = 0
-                    var picId: Int = 0
+                    var picId: Long = 0
                     var img1v1Url: String? = null
                     var img1v1: Int = 0
                     var trans: Any? = null
@@ -115,7 +115,7 @@ class MusicList {
                 var name: String? = null
                 var picUrl: Any? = null
                 var albumSize: Int = 0
-                var picId: Int = 0
+                var picId: Long = 0
                 var img1v1Url: String? = null
                 var img1v1: Int = 0
                 var trans: Any? = null

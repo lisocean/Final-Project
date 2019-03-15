@@ -33,7 +33,12 @@ class CpDatabase private constructor(private val context: Context){
                             M.MIME_TYPE,
                             M.ARTIST_ID),
                         null, null, null)
-                val musicOfList = cursor.parse()
+                val musicOfList =
+                    cursor
+                        .parse()
+                        .filter {
+                            it.duration >= 1000*60
+                        }
                 cursor?.close()
                 observer.onSuccess(musicOfList)
             }
@@ -47,8 +52,7 @@ class CpDatabase private constructor(private val context: Context){
     fun getCpMusic() =
         observable
               //Eliminate quick serial clicks caused by hand shake
-            .subscribeOn(Schedulers.io())                                //io thread
-            .observeOn(AndroidSchedulers.mainThread())                     //block will run in main thread
+            .subscribeOn(Schedulers.io())                                //io thread             //block will run in main thread
             .onErrorReturn { listOf() }
 
 

@@ -12,14 +12,37 @@ import org.jetbrains.anko.support.v4.defaultSharedPreferences
  */
 inline fun <reified T : Any> Context.argument(key : String) =
     lazy {
-        getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
-        .getString(key,"") as T }
+        try {
+            getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
+                .getString(key,"") as T
+        }catch (e : Throwable){
+            return@lazy 0
+        }
+    }
 
 inline fun <reified T :Any> Fragment.argument(key: String) = lazy {
     context?.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         ?.getString(key  , "") as T
 }
 
+fun Context.argumentInt(key : String) =
+    lazy {
+        try {
+            getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
+                .getInt(key,0)
+        }catch (e : Throwable){
+            return@lazy 0
+        }
+    }
+
+fun  Fragment.argumentInt(key: String) = lazy {
+    try {
+    context?.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
+        ?.getInt(key  , 0)
+    }catch (e : Throwable){
+        return@lazy 0
+    }
+}
 /**
  * set parameter configuration information
  */
@@ -27,5 +50,11 @@ fun View.setArgument(key: String, data : String){
     context.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         .edit()
         .putString(key, data)
+        .apply()
+}
+fun View.setArgumentInt(key: String, data : Int){
+    context.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
+        .edit()
+        .putInt(key, data)
         .apply()
 }

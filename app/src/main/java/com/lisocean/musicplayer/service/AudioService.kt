@@ -14,7 +14,6 @@ import android.widget.RemoteViews
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.helper.PlayMode
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
-import com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel
 import org.greenrobot.eventbus.EventBus
 import kotlin.random.Random
 

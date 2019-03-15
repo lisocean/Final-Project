@@ -29,11 +29,23 @@ class SongInfo() : Parcelable {
         when(data){
             is MusicList.ResultBean.SongsBean -> injectFromResult(data)
             is SongsDetail.SongsBean -> injectFromDetail(data)
+            is AudioMediaBean -> injectFromAudio(data)
             else -> throw Throwable("inject from is error")
         }
         return this
     }
 
+    private fun injectFromAudio(data: AudioMediaBean){
+        id = 0
+        mvid = 0
+        name = data.title
+        duration = data.duration.toInt()
+        albumname  = data.album
+        albumId = data.album_id.toInt()
+        artists = data.artist
+        artistsId = data.artist_id.toString()
+        this.data = data.data
+    }
     private fun injectFromResult(data : MusicList.ResultBean.SongsBean){
         id = data.id
         mvid = data.mvid

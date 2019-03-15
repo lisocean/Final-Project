@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionInflater
@@ -17,17 +18,15 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import com.google.android.flexbox.*
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivitySearchBinding
 import com.lisocean.musicplayer.extension.MultipleStatusView
 import com.lisocean.musicplayer.helper.CleanLeakUtils
 import com.lisocean.musicplayer.helper.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
-import com.lisocean.musicplayer.helper.argument
 import com.lisocean.musicplayer.model.data.local.SongInfo
-import com.lisocean.musicplayer.model.data.search.MusicList
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
-import com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.search.dependencies.SearchContract
 import com.lisocean.musicplayer.ui.search.dependencies.ViewAnimUtils
@@ -45,7 +44,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     /**
      * 多种状态的 View 的切换
      */
-    protected var mLayoutStatusView: MultipleStatusView? = null
+    private var mLayoutStatusView: MultipleStatusView? = null
     private val mViewModel by viewModel<SearchViewModel>()
     private val mBinding by lazy {
         DataBindingUtil.setContentView<ActivitySearchBinding>(this, R.layout.activity_search)
@@ -60,7 +59,20 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
 
         }
     }
-    open val mRetryClickListener: View.OnClickListener = View.OnClickListener {
+    private val hotAdapter by lazy {
+        SingleTypeAdapter<String>(
+            this,
+            R.layout.item_flow_text,
+            mViewModel.searchHot).apply {
+            onBindItem { v, item ->
+                v.setOnClickListener {
+                    mViewModel.text.set(item)
+                    start()
+                }
+            }
+        }
+    }
+    val mRetryClickListener: View.OnClickListener = View.OnClickListener {
         start()
     }
 
@@ -94,6 +106,17 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
 
         }
 
+        //set search hot
+        showHotWordView()
+        var flexBoxLayoutManager = FlexboxLayoutManager(this)
+        flexBoxLayoutManager.flexWrap = FlexWrap.WRAP      //按正常方向换行
+        flexBoxLayoutManager.flexDirection = FlexDirection.ROW   //主轴为水平方向，起点在左端
+        flexBoxLayoutManager.alignItems = AlignItems.CENTER    //定义项目在副轴轴上如何对齐
+        flexBoxLayoutManager.justifyContent = JustifyContent.FLEX_START  //多个轴对齐方式
+        mRecyclerView_hot.layoutManager = flexBoxLayoutManager
+        mRecyclerView_hot.adapter = hotAdapter
+
+
         mLayoutStatusView = multipleStatusView
 
         //状态栏透明和间距处理
@@ -103,8 +126,8 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     }
 
     fun start(){
-        showLoading()
         setSearchResult()
+        showLoading()
         mViewModel.text.get()?.let {
             mViewModel.search(it){error ->
                 dismissLoading()
@@ -167,6 +190,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
     private fun showHotWordView(){
         layout_hot_words.visibility = View.VISIBLE
         layout_content_result.visibility = View.GONE
+
     }
     /**
      * 退场动画

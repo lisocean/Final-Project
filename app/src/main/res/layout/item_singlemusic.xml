@@ -2,7 +2,7 @@
 <layout>
     <data>
         <variable name="item"
-                  type="com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel"/>
+                  type="com.lisocean.musicplayer.model.data.local.SongInfo"/>
         <variable name="presenter"
                   type="com.lisocean.musicplayer.ui.presenter.ItemClickPresenter"/>
     </data>
@@ -13,19 +13,13 @@
             android:layout_height="60dp"
             android:onClick="@{(v)->presenter.onItemClick(v,item)}"
             android:background="@drawable/itemtouch_bg">
-        <TextView
-                android:id="@+id/textOfIndex"
-                android:layout_width="50dp"
-                android:text="@{item.index}"
-                android:singleLine="true"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                tools:text="10"/>
+        <Space android:layout_width="15dp"
+               android:layout_height="match_parent"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="59dp"
@@ -39,7 +33,7 @@
                             android:id="@+id/textOfSong"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                            android:text="@{item.title}"
+                            android:text="@{item.name}"
                             android:textColor="#B3000000"
                             android:layout_marginBottom="3dp"
                             android:layout_marginTop="7dp"
@@ -58,7 +52,7 @@
                                 android:id="@+id/textOfArtist"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginStart="5dp"
-                                android:text="@{item.artist}"
+                                android:text="@{item.artists}"
                                 android:gravity="fill_vertical"
                                 android:layout_width="wrap_content"
                                 android:layout_height="16dp"

@@ -17,12 +17,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val viewModelModule =  module{
-    viewModel {LocalMusicViewModel(get()) }
+    viewModel {(id: Int) ->LocalMusicViewModel(id,get()) }
     viewModel { SearchViewModel(get()) }
 }
 
 val repoModule =  module{
-    single { LocalMusicRepo(get()) }
+    single { LocalMusicRepo(get(), get(), get()) }
     single { MusicSearchRepo(get()) }
 }
 

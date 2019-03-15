@@ -21,7 +21,10 @@
                 android:layout_margin="2dp"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
-                android:src="@drawable/ic_face"/>
+                android:backgroundTint="@color/backgroundColor"
+                url="@{vm.picUrl}"
+                android:src="@color/backgroundColor"
+                />
         <LinearLayout
                 android:layout_marginStart="5dp"
                 android:layout_width="0dp"
@@ -32,7 +35,7 @@
                     android:id="@+id/textOfSong"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:text="@{vm.title}"
+                    android:text="@{vm.currentSong.name}"
                     android:textColor="#B3000000"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="7dp"
@@ -43,7 +46,7 @@
                         android:id="@+id/textOfArtist"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="5dp"
-                        android:text="@{vm.artist}"
+                        android:text="@{vm.currentSong.artists}"
                         android:gravity="fill_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="16dp"
@@ -70,15 +73,16 @@
                 android:background="@drawable/itemtouch_bg_view"
                 android:id="@+id/bottom_popup_more"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:onClick="@{(v)->presenter.onClick(v)}"
                 tools:ignore="UnusedAttribute">
             <ImageView
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginTop="20dp"
                     android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/list_more"
+                    android:layout_height="20dp"
+                    android:src="@drawable/music_icn_more"
             />
 
         </LinearLayout>

@@ -39,7 +39,12 @@ interface MusicService {
      */
     @GET("check/music")
     fun checkMusicById(@Query("id") id: Int): Single<CheckMusic>
-
+    /**
+     * 说明 : 调用此接口,可获取热门搜索列表
+     * 接口地址 : /search/hot
+     */
+    @GET("search/hot")
+    fun getHotSearch() : Single<Hot>
     /**
      * 说明 : 调用此接口 , 传入音乐 id 和 limit 参数 , 可获得该音乐的所有评论
      * 必选参数 : id: 音乐 id

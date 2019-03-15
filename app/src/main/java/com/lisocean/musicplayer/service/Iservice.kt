@@ -2,7 +2,6 @@ package com.lisocean.musicplayer.service
 
 import com.lisocean.musicplayer.helper.PlayMode
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
-import com.lisocean.musicplayer.ui.localmusic.viewmodel.MusicItemViewModel
 
 interface Iservice {
     fun updatePlayState()
