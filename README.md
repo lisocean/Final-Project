@@ -30,5 +30,5 @@ This is a music player using the MVVM(view--viewmodel--model), Network Api comes
 Content Providers, App DataBase(playTime >= 60s)to get local music. 
 Synchronize of database is search online resources to adapter local Content Providers' Music and add it to local App database.
 
-![demo](display/demo1.jpg)
-![demo](display/demo2.jpg)
+<img src="display/demo1.jpg">
+<img src="display/demo2.jpg">
