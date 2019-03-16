@@ -31,10 +31,11 @@
                         android:orientation="vertical">
                     <TextView
                             android:id="@+id/textOfSong"
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
                             android:text="@{item.name}"
                             android:textColor="#B3000000"
+                            android:gravity="center"
                             android:layout_marginBottom="3dp"
                             android:layout_marginTop="7dp"
                             android:textSize="17sp"
@@ -43,32 +44,37 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                        <ImageView
-                                android:background="@drawable/sq_icon"
-                                android:layout_width="21dp"
-                                android:layout_height="14dp"
-                                android:layout_marginTop="8dp"/>
+
                         <TextView
                                 android:id="@+id/textOfArtist"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginStart="5dp"
                                 android:text="@{item.artists}"
-                                android:gravity="fill_vertical"
+                                android:gravity="center"
+                                android:textSize="12sp"
                                 android:layout_width="wrap_content"
-                                android:layout_height="16dp"
-                                tools:text="B2-成人礼"/>
+                                android:layout_height="18dp"
+                                tools:text="By2-成人礼"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
-                <ImageView
-                        android:background="@drawable/itemtouch_bg_view"
-                        android:id="@+id/isLove"
-                        android:src="@drawable/selector_item_singlemusic_love"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:onClick="@{(v)->presenter.onLikeClick(v,item)}"
-                        tools:ignore="UnusedAttribute"/>
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="match_parent"
+                              android:background="@drawable/itemtouch_bg_view"
+                              android:onClick="@{(v)->presenter.onLikeClick(v,item)}">
+                    <ImageView
+                            android:id="@+id/isLove"
+                            android:src="@drawable/main_mv_play"
+                            android:layout_marginTop="19.5dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_width="21dp"
+                            android:layout_height="21dp"
+
+                            tools:ignore="UnusedAttribute"/>
+                </LinearLayout>
+
                 <LinearLayout
                         android:background="@drawable/itemtouch_bg_view"
                         android:id="@+id/popUpMoreAbout"
@@ -80,10 +86,10 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="25dp"
-                            android:layout_marginTop="21dp"
-                            android:layout_marginBottom="21dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="15dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
 
                             android:src="@drawable/music_icn_more"
                     />

@@ -21,7 +21,7 @@ abstract class BaseViewAdapter<T>(val context: Context, private val list: Observ
 
     var itemDecorator: ItemDecorator? = null
 
-    private var itemAnimator: ItemAnimator? = ScaleInItemAnimator(interpolator = DecelerateInterpolator())
+    var itemAnimator: ItemAnimator? = ScaleInItemAnimator(interpolator = DecelerateInterpolator())
 
     private var onBindLisenter : ((v : View, item : T)->Unit)? = null
 

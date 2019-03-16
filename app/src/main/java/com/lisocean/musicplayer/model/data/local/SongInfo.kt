@@ -84,6 +84,8 @@ class SongInfo() : Parcelable {
         albumname = parcel.readString()
         artists = parcel.readString()
         artistsId = parcel.readString()
+        data = parcel.readString()
+        pictureUrl = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -95,6 +97,8 @@ class SongInfo() : Parcelable {
         parcel.writeString(albumname)
         parcel.writeString(artists)
         parcel.writeString(artistsId)
+        parcel.writeString(data)
+        parcel.writeString(pictureUrl)
     }
 
     override fun describeContents(): Int {

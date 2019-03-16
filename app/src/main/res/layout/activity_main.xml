@@ -37,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:title="Local Music"
 
-                app:navigationIcon="@drawable/actionbar_music_selected"
+                app:navigationIcon="@drawable/main_actionbar_music"
                 app:popupTheme="@style/toolbarTheme"
                 app:titleTextColor="@android:color/white">
         </android.support.v7.widget.Toolbar>
@@ -90,7 +90,7 @@
                     android:layout_height="1dp"/>
 
             <include
-                    layout="@layout/activity_music_bottom"
+                    layout="@layout/bottom_main_music"
 
                     app:presenter="@{presenter}"
                     app:vm="@{vm}"/>

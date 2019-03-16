@@ -30,6 +30,7 @@ import com.lisocean.musicplayer.helper.argument
 import com.lisocean.musicplayer.helper.argumentInt
 import com.lisocean.musicplayer.service.AudioService
 import com.lisocean.musicplayer.service.Iservice
+import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.ui.search.SearchActivity
@@ -122,7 +123,10 @@ class MainActivity : AppCompatActivity(), Presenter{
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.bottom_main -> {
+                val intent = Intent(this, MusicPlayingActivity::class.java)
+                intent.putParcelableArrayListExtra("list", mViewModel.list)
 
+                startActivity(intent)
 
             }
             R.id.bottom_play_button -> {
@@ -172,5 +176,7 @@ class MainActivity : AppCompatActivity(), Presenter{
         unbindService(conn)
    //   EventBus.getDefault().unregister(this)
     }
+
+
 
 }

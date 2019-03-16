@@ -14,6 +14,7 @@ import android.transition.TransitionInflater
 import android.view.KeyEvent
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -27,6 +28,7 @@ import com.lisocean.musicplayer.helper.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
+import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.search.dependencies.SearchContract
 import com.lisocean.musicplayer.ui.search.dependencies.ViewAnimUtils
@@ -56,7 +58,6 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
             R.layout.item_searchresult,
             mViewModel.songs).apply {
             itemPresenter = this@SearchActivity
-
         }
     }
     private val hotAdapter by lazy {
@@ -70,6 +71,10 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
                     start()
                 }
             }
+            itemAnimator = ScaleInItemAnimator(
+                from = 0.5f,
+                duration = 1000L,
+                interpolator = DecelerateInterpolator())
         }
     }
     val mRetryClickListener: View.OnClickListener = View.OnClickListener {
@@ -91,7 +96,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     closeSoftKeyboard()
                     if (mViewModel.text.get().isNullOrEmpty()) {
-                        toast("Help you find music")
+                        showHotWordView()
                     } else {
                         start()
                     }
@@ -108,12 +113,13 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
 
         //set search hot
         showHotWordView()
-        var flexBoxLayoutManager = FlexboxLayoutManager(this)
-        flexBoxLayoutManager.flexWrap = FlexWrap.WRAP      //按正常方向换行
-        flexBoxLayoutManager.flexDirection = FlexDirection.ROW   //主轴为水平方向，起点在左端
-        flexBoxLayoutManager.alignItems = AlignItems.CENTER    //定义项目在副轴轴上如何对齐
-        flexBoxLayoutManager.justifyContent = JustifyContent.FLEX_START  //多个轴对齐方式
-        mRecyclerView_hot.layoutManager = flexBoxLayoutManager
+
+        mRecyclerView_hot.layoutManager = FlexboxLayoutManager(this).apply {
+            flexWrap = FlexWrap.WRAP      //按正常方向换行
+            flexDirection = FlexDirection.ROW   //主轴为水平方向，起点在左端
+            alignItems = AlignItems.CENTER    //定义项目在副轴轴上如何对齐
+            justifyContent = JustifyContent.FLEX_START  //多个轴对齐方式
+        }
         mRecyclerView_hot.adapter = hotAdapter
 
 
