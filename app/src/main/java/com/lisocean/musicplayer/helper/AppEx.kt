@@ -58,3 +58,10 @@ fun View.setArgumentInt(key: String, data : Int){
         .putInt(key, data)
         .apply()
 }
+inline fun <reified T> Iterable<T>.findIndex(predicate: (T) -> Boolean): Int{
+    forEachIndexed{ index ,t ->
+        if (predicate(t))
+            return index
+    }
+    return -1
+}

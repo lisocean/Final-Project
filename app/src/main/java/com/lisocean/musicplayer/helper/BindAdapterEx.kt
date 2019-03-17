@@ -10,6 +10,7 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -17,6 +18,13 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.lisocean.musicplayer.R
 import org.jetbrains.anko.image
+@BindingAdapter(value = ["visibile"])
+fun setVisibile(v : LinearLayout?, mvid : Int){
+    if(mvid <= 0)
+        v?.visibility = View.GONE
+    else
+        v?.visibility = View.VISIBLE
+}
 
 @BindingAdapter(value = ["url"])
 fun setUrl(v : ImageView?, url : String?){
@@ -34,10 +42,6 @@ fun setUrl(v : ImageView?, url : String?){
                 .load(R.drawable.ic_blackground)
                 .centerCrop()
                 .into(this)
-
-
-
-
         }
     }
 }

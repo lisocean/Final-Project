@@ -12,12 +12,15 @@ import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.repository.LocalMusicRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
+import org.jetbrains.anko.collections.forEachWithIndex
 
-class LocalMusicViewModel(private val musicId : Int,private val repo : LocalMusicRepo) : ViewModel() {
+class LocalMusicViewModel(private val musicId : Int, private val repo : LocalMusicRepo) : ViewModel() {
     val list = ObservableArrayList<SongInfo>()
     val isPlaying = ObservableBoolean()
     val currentSong = ObservableField<SongInfo>()
     val picUrl = ObservableField<String>()
+    val position = ObservableInt()
+
     val localAudioList = arrayListOf<AudioMediaBean>()
     val localAppList = arrayListOf<SongInfo>()
     init {
@@ -34,9 +37,10 @@ class LocalMusicViewModel(private val musicId : Int,private val repo : LocalMusi
                 list.clear()
                 list.addAll(t1)
 
-                list.forEach {
+                list.forEachWithIndex { index, it ->
                     if (musicId == it.id) {
                         currentSong.set(it)
+                        position.set(index)
                         picUrl.set(currentSong.get()?.pictureUrl)
                     }
                 }

@@ -17,9 +17,14 @@ import android.renderscript.ScriptIntrinsicColorMatrix
 class BlurTransformation(val context: Context, var radius : Float) : BitmapTransformation() {
 
    private val rs by lazy { RenderScript.create(context) }
-
+    /**
+     * set alpha 0.5f
+     */
     private val BRIGHTNESS_ADJUSTMENT_FACTOR_MATRIX =
-        Matrix3f(floatArrayOf(0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f))
+        Matrix3f(floatArrayOf(
+            0.5f, 0.0f, 0.0f,
+            0.0f, 0.5f, 0.0f,
+            0.0f, 0.0f, 0.5f))
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {
         messageDigest.update("blur transform".toByteArray())

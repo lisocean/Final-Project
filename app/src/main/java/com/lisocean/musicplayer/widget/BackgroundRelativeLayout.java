@@ -16,7 +16,7 @@ import com.lisocean.musicplayer.R;
 
 public class BackgroundRelativeLayout extends RelativeLayout {
 
-    private final int DURATION_ANIMATION = 500;
+    private final int DURATION_ANIMATION = 300;
     private final int INDEX_BACKGROUND = 0;
     private final int INDEX_FOREGROUND = 1;
     /**

@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), Presenter{
             R.id.bottom_main -> {
                 val intent = Intent(this, MusicPlayingActivity::class.java)
                 intent.putParcelableArrayListExtra("list", mViewModel.list)
-
+                intent.putExtra("position", mViewModel.position.get())
                 startActivity(intent)
 
             }
