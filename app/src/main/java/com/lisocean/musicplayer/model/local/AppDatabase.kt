@@ -2,7 +2,7 @@ package com.lisocean.musicplayer.model.local
 
 import android.arch.persistence.room.*
 import android.content.Context
-import com.lisocean.musicplayer.helper.Constants
+import com.lisocean.musicplayer.helper.constval.Constants
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.local.dao.SongInfoDao
 

@@ -113,7 +113,7 @@ class StatusBarUtil {
                     immersive(window, color, alpha)
                 }
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                    darkModeForM(window, true)
+//                    darkModeForM(window, true)
                     immersive(window, color, alpha)
                 }
                 Build.VERSION.SDK_INT >= 19 -> {

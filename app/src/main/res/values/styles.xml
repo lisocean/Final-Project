@@ -36,4 +36,9 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="pop">
+        <item name="android:windowEnterAnimation">@anim/pop_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit</item>
+    </style>
 </resources>

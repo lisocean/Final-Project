@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.helper
+package com.lisocean.musicplayer.helper.utils
 
 import android.content.Context
 import android.view.View

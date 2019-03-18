@@ -1,11 +1,11 @@
-package com.lisocean.musicplayer.helper
+package com.lisocean.musicplayer.helper.utils
 
 import android.database.Cursor
 import android.provider.MediaStore.Audio.Media as S
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 
 
-@JvmName("ParseCursor")
+
 /**
  * 根据特定位置上的it获取bean
  */

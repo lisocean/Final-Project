@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionInflater
@@ -23,8 +22,8 @@ import com.google.android.flexbox.*
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivitySearchBinding
 import com.lisocean.musicplayer.extension.MultipleStatusView
-import com.lisocean.musicplayer.helper.CleanLeakUtils
-import com.lisocean.musicplayer.helper.ErrorStatus
+import com.lisocean.musicplayer.helper.utils.CleanLeakUtils
+import com.lisocean.musicplayer.helper.constval.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
@@ -127,6 +126,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
 
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
+        StatusBarUtil.darkModeForM(window, true)
         StatusBarUtil.setPaddingSmart(this, toolbar)
 
     }

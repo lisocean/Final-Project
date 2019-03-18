@@ -1,10 +1,9 @@
-package com.lisocean.musicplayer.helper
+package com.lisocean.musicplayer.helper.ex
 
 import android.content.Context
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.view.View
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
+import com.lisocean.musicplayer.helper.constval.Constants
 
 /**
  *  获取参数配置信息

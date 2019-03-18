@@ -35,4 +35,6 @@ src="display/demo2.jpg" alt="screenshot" title="screenshot" width="216"  height=
 <img src="display/demo3.jpg" alt="screenshot" title="screenshot" width="216" height="384"> <img 
 src="display/demo4.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
 <img src="display/demo5.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
+<img src="display/demo6.jpg" alt="screenshot" title="screenshot" width="216"  height="384"><img 
+src="display/demo7.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
 

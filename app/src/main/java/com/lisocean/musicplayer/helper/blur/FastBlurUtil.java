@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.helper;
+package com.lisocean.musicplayer.helper.blur;
 
 import android.graphics.Bitmap;
 

@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.MediaStore.Audio.Media as M
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
-import com.lisocean.musicplayer.helper.parse
+import com.lisocean.musicplayer.helper.utils.parse
 import io.reactivex.Single
 import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class CpDatabase private constructor(private val context: Context){

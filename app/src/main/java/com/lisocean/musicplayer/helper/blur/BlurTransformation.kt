@@ -1,16 +1,12 @@
-package com.lisocean.musicplayer.helper
+package com.lisocean.musicplayer.helper.blur
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
+import android.renderscript.*
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
+import com.lisocean.renderscript.ScriptC_sketch
 import java.security.MessageDigest
-import android.renderscript.Matrix3f
-import android.renderscript.ScriptIntrinsicColorMatrix
 
 
 @Suppress("DEPRECATION")
@@ -55,6 +51,7 @@ class BlurTransformation(val context: Context, var radius : Float) : BitmapTrans
         // Load up an instance of the specific script that we want to use.
         //加载我们想要使用的特定脚本的实例
         val script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
+//        val s = ScriptC_sketch(rs)
         //(4)
         script.setInput(input)
         //(5)
@@ -69,7 +66,6 @@ class BlurTransformation(val context: Context, var radius : Float) : BitmapTrans
         // Copy the output to the blurred bitmap
         //将输出复制到模糊的位图
         output.copyTo(blurredBitmap)
-        //(8)
         return blurredBitmap
     }
 

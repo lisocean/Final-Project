@@ -5,7 +5,7 @@ import com.lisocean.musicplayer.model.remote.MusicService
 import com.lisocean.musicplayer.model.remote.MvService
 import com.lisocean.musicplayer.model.repository.LocalMusicRepo
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
-import com.lisocean.musicplayer.helper.Constants
+import com.lisocean.musicplayer.helper.constval.Constants
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.local.AppDatabase
 import com.lisocean.musicplayer.model.repository.MusicPlayingRepo

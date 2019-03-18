@@ -1,8 +1,6 @@
 package com.lisocean.musicplayer.ui.localmusic
 
 import android.Manifest
-import android.annotation.TargetApi
-import android.app.Dialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -20,27 +18,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
-import com.lisocean.musicplayer.BR
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMainBinding
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.adapter.LmPagerAdapter
-import com.lisocean.musicplayer.helper.Constants
-import com.lisocean.musicplayer.helper.argument
-import com.lisocean.musicplayer.helper.argumentInt
+import com.lisocean.musicplayer.helper.constval.Constants
+import com.lisocean.musicplayer.helper.ex.argumentInt
 import com.lisocean.musicplayer.service.AudioService
 import com.lisocean.musicplayer.service.Iservice
 import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
-import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
-import org.jetbrains.anko.support.v4.startActivity
-import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 

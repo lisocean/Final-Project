@@ -1,6 +1,6 @@
 package com.lisocean.musicplayer.service
 
-import com.lisocean.musicplayer.helper.PlayMode
+import com.lisocean.musicplayer.helper.constval.PlayMode
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 
 interface Iservice {

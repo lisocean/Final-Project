@@ -4,15 +4,10 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
-import android.widget.RemoteViews
-import com.lisocean.musicplayer.R
-import com.lisocean.musicplayer.helper.PlayMode
+import com.lisocean.musicplayer.helper.constval.PlayMode
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 import org.greenrobot.eventbus.EventBus
 import kotlin.random.Random

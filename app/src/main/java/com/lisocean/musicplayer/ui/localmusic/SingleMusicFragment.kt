@@ -1,8 +1,6 @@
 package com.lisocean.musicplayer.ui.localmusic
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,16 +11,15 @@ import android.view.ViewGroup
 import com.lisocean.musicplayer.BR
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.FragmentSinglemusicBinding
-import com.lisocean.musicplayer.helper.*
+import com.lisocean.musicplayer.helper.constval.Constants
+import com.lisocean.musicplayer.helper.ex.*
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.fragment_singlemusic.view.*
 import org.jetbrains.anko.support.v4.toast
-import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 
 @Suppress("DEPRECATION")
@@ -89,6 +86,9 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
 
     override fun onPopClick(v: View?, item: SongInfo) {
 
-        toast("pop")
+        val popUp = PlayListPopUpWindow(window = activity!!.window,context = context!!, listTemp = mViewModel.list.toList())
+        val scale = context?.resources?.displayMetrics?.density ?: 0.1f
+        popUp.showAsDropDown( this.view,0, (this.view!!.height + 60 * scale + 0.5f).toInt())
+
     }
 }

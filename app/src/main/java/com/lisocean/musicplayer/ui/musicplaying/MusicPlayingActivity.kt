@@ -7,33 +7,27 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBinding
-import com.lisocean.musicplayer.helper.BlurBitmapTransformtion
-import com.lisocean.musicplayer.helper.BlurTransformation
+import com.lisocean.musicplayer.helper.blur.BlurBitmapTransformtion
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.musicplaying.dependencies.RoundFragment
 import com.lisocean.musicplayer.ui.musicplaying.viewmodel.MusicPlayingViewModel
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.widget.AlbumViewPager
+import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.activity_music_playing.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
@@ -148,7 +142,12 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
             R.id.playPre -> {
                 changeSong(mViewModel.position.get() - 1)
             }
-            R.id.popUpMore -> {toast("popUpMore")}
+            R.id.popUpMore -> {
+                val popUp = PlayListPopUpWindow(window = window,context = this, listTemp = mViewModel.list.toList())
+                val scale = resources.displayMetrics.density
+                popUp.showAsDropDown(find(R.id.space_playing_music),0, space_playing_music.height)
+
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.helper
+package com.lisocean.musicplayer.helper.constval
 
 /**
  * Created by xuhao on 2017/12/5.
