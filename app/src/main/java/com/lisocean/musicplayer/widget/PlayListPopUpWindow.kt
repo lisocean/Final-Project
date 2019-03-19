@@ -9,10 +9,12 @@ import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.view.animation.DecelerateInterpolator
 import android.widget.PopupWindow
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
+import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import org.jetbrains.anko.find
 import org.jetbrains.anko.linearLayout
@@ -35,6 +37,7 @@ class PlayListPopUpWindow (private val window : Window, context : Context, listT
             R.layout.item_popupmusic,
             list).apply {
             itemPresenter = this@PlayListPopUpWindow
+            itemAnimator = null
         }
     }
     //记录当前应用程序窗体透明度

@@ -59,13 +59,14 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
             interpolator = LinearInterpolator()
         }
     }
+    private var isNeedleStarted  = false
 
     /**
      * rotate
      */
     private var rotateAnimation : ObjectAnimator? = null
 
-    private val animatorSet by lazy { AnimatorSet() }
+//    private val animatorSet by lazy { AnimatorSet() }
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,10 +77,12 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
         }
         mBinding.vm = mViewModel
         mBinding.presenter = this
+
         initViewPager()
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
     }
+
 
     private fun initViewPager() {
 
@@ -87,25 +90,112 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
 
         view_pager.adapter = object : FragmentPagerAdapter(supportFragmentManager){
             override fun getItem(p0: Int): Fragment {
-                return RoundFragment.newInstance(mViewModel.list[p0].pictureUrl)
+                return when(p0){
+                    0 ->  RoundFragment.newInstance(mViewModel.list[mViewModel.list.size - 1].pictureUrl)
+                    mViewModel.list.size + 1 -> RoundFragment.newInstance(mViewModel.list[0].pictureUrl)
+                    else ->  RoundFragment.newInstance(mViewModel.list[p0 - 1].pictureUrl)
+                }
             }
             override fun getCount(): Int {
-                return mViewModel.list.size
+                return mViewModel.list.size + 2
             }
         }
-        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(p0: Int) {
+        view_pager.currentItem = mViewModel.position.get() + 1
 
+        //2 3 1 origin    2 3 4 1 other pager  2 3 4 1 4 //边界
+        //out invoke =>  3 4 1
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            var isChanged = false
+            var isBounds = false
+            override fun onPageSelected(p0: Int) {
+                // bound => second onPageSelected return
+                if(isBounds){
+                    isBounds = false
+                    return
+                }
+//                println(4)
+                if(p0 == 0 || p0 == mViewModel.list.size + 1)
+                    isBounds = true
+                //change info
+                isChanged = true
+                when(p0){
+                    0 -> mViewModel.position.set(mViewModel.list.size - 1)
+                    mViewModel.list.size + 1 ->  mViewModel.position.set(0)
+                    else ->  mViewModel.position.set(p0 - 1)
+                }
+                if(isBounds){
+                    find<View>(R.id.playButton).isSelected = true
+                    mViewModel.isPlaying.set(true)
+                    mViewModel.playingSong.set(mViewModel.list[mViewModel.position.get()])
+                    if(p0 == 0){
+                    }
+                }else{
+                    changeCurrentSong(mViewModel.position.get())
+                }
+
+            }
+
+            override fun onPageScrollStateChanged(p0: Int) {
+                when(p0){
+                    ViewPager.SCROLL_STATE_IDLE -> {
+//                        println(1)
+                        when(view_pager.currentItem){
+                            0 -> {
+                                view_pager.setCurrentItem(mViewModel.list.size, false)
+                                if(!isNeedleStarted){
+                                    mNeedleAnim.start()
+                                    isNeedleStarted = true
+                                }
+                                rotateAnimation?.end()
+                                rotateAnimation = view_pager.rotate(view_pager.currentItem).apply { start() }
+                            }
+                            mViewModel.list.size + 1 -> {
+                                view_pager.setCurrentItem(1, false)
+                                if(!isNeedleStarted){
+                                    mNeedleAnim.start()
+                                    isNeedleStarted = true
+                                }
+                                rotateAnimation?.end()
+                                rotateAnimation = view_pager.rotate(view_pager.currentItem).apply { start() }
+                            }
+                        }
+
+                        if(isChanged){
+
+                        }else{
+                            if(mViewModel.isPlaying.get())
+                            {
+                               if(!isNeedleStarted){
+                                   mNeedleAnim.start()
+                                   isNeedleStarted = true
+                               }
+                                rotateAnimation?.resume()
+                            }else{
+                                // pause state
+                            }
+                        }
+                    }
+                    ViewPager.SCROLL_STATE_DRAGGING -> {
+//                        println(2)
+                        if(mViewModel.isPlaying.get()){
+                            if(isNeedleStarted){
+                                mNeedleAnim.reverse()
+                                isNeedleStarted = false
+                            }
+                            rotateAnimation?.pause()
+                        }
+                    }
+                    ViewPager.SCROLL_STATE_SETTLING ->{
+//                        println(3)
+                    }
+                }
             }
 
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
             }
 
-            override fun onPageSelected(p0: Int) {
-            }
 
         })
-        view_pager.currentItem = mViewModel.position.get()
         changeBackground()
     }
 
@@ -115,7 +205,11 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
                 when(mViewModel.isPlaying.get()){
                     true -> {
                         v.isSelected = false
-                        mNeedleAnim.reverse()
+                        if(isNeedleStarted){
+                            mNeedleAnim.reverse()
+                            isNeedleStarted = false
+                        }
+
                         rotateAnimation?.pause()
                         mViewModel.isPlaying.set(false)
                     }
@@ -124,12 +218,15 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
                         if(rotateAnimation == null)
                         {
                             rotateAnimation = view_pager
-                                .rotate(mViewModel.position.get())
+                                .rotate(mViewModel.position.get() + 1)
                                 .apply { start() }
                         }else
                             rotateAnimation?.resume()
 
-                        mNeedleAnim.start()
+                        if(!isNeedleStarted){
+                            mNeedleAnim.start()
+                            isNeedleStarted = true
+                        }
                         mViewModel.isPlaying.set(true)
                     }
                 }
@@ -137,14 +234,13 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
             }
             R.id.playMode -> {toast("mode")}
             R.id.playNext -> {
-                changeSong(mViewModel.position.get() + 1)
+                outInvokeSong(mViewModel.position.get() + 1)
             }
             R.id.playPre -> {
-                changeSong(mViewModel.position.get() - 1)
+                outInvokeSong(mViewModel.position.get() - 1)
             }
             R.id.popUpMore -> {
                 val popUp = PlayListPopUpWindow(window = window,context = this, listTemp = mViewModel.list.toList())
-                val scale = resources.displayMetrics.density
                 popUp.showAsDropDown(find(R.id.space_playing_music),0, space_playing_music.height)
 
             }
@@ -172,20 +268,38 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
     /**
      * change song and then update all view and service
      */
-    private fun changeSong(position : Int){
-        //TODO => When position == -1 or size and WeakReference
-
+//    private fun changeSong(position : Int){
+//        //TODO => When position == -1 or size and WeakReference
+//
+//        rotateAnimation?.end()
+//        rotateAnimation = view_pager.rotate(position).apply { start() }
+//        mViewModel.position.set(position)
+//        mViewModel.playingSong.set(mViewModel.list[mViewModel.position.get()])
+//        view_pager.currentItem = mViewModel.position.get()
+//        changeBackground()
+//        mViewModel.isPlaying.set(true)
+//        mNeedleAnim.start()
+//        find<View>(R.id.playButton).isSelected = true
+//    }
+    private fun outInvokeSong(position: Int){
+        if(isNeedleStarted){
+            mNeedleAnim.reverse()
+            isNeedleStarted = false
+        }
+        view_pager.currentItem = position + 1
+    }
+    private fun changeCurrentSong(position: Int){
         rotateAnimation?.end()
-        rotateAnimation = view_pager.rotate(position).apply { start() }
-        mViewModel.position.set(position)
+        rotateAnimation = view_pager.rotate(position + 1).apply { start() }
         mViewModel.playingSong.set(mViewModel.list[mViewModel.position.get()])
-        view_pager.currentItem = mViewModel.position.get()
         changeBackground()
         mViewModel.isPlaying.set(true)
-        mNeedleAnim.start()
+        if(!isNeedleStarted){
+            mNeedleAnim.start()
+            isNeedleStarted = true
+        }
         find<View>(R.id.playButton).isSelected = true
     }
-
     /**
      * chenge back ground
      */
@@ -201,5 +315,4 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
                 }
             })
     }
-
 }

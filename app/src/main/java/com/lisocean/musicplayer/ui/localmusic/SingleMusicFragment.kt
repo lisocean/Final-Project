@@ -39,18 +39,18 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
                     R.layout.item_singlemusic,
                     mViewModel.list).apply {
             itemPresenter = this@SingleMusicFragment
-            this.onBindItem { v :View , item : SongInfo ->
-                try {
-                    val selectedState =  this@SingleMusicFragment.argument<String>(item.id.toString()).value
-                    if (selectedState.isEmpty())
-                        throw Exception("go next")
-                    v.isSelected = selectedState.toBoolean()
-                    //v.isSelected = selectedState
-                }catch (e : Exception){
-                    v.isSelected = false
-                }
-
-            }
+//            this.onBindItem { v :View , item : SongInfo ->
+//                try {
+//                    val selectedState =  this@SingleMusicFragment.argument<String>(item.id.toString()).value
+//                    if (selectedState.isEmpty())
+//                        throw Exception("go next")
+//                    v.isSelected = selectedState.toBoolean()
+//                    //v.isSelected = selectedState
+//                }catch (e : Exception){
+//                    v.isSelected = false
+//                }
+//
+//            }
         }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,7 +80,7 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
                 true -> false
                 false -> true
             }
-            setArgument(item.id.toString(), isSelected.toString())
+//            setArgument(item.id.toString(), isSelected.toString())
         }
     }
 
