@@ -15,6 +15,7 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.localmusic.MainActivity"
+
                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -32,7 +33,7 @@
                   android:screenOrientation="portrait"
                 />
 
-        <service android:name=".service.AudioService" tools:ignore="InnerclassSeparator"/>
+        <service android:name=".service.PlayingService" tools:ignore="InnerclassSeparator"/>
     </application>
 
 </manifest>

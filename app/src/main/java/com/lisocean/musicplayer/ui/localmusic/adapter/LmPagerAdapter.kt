@@ -21,8 +21,6 @@ class LmPagerAdapter (val context : Context?, fm: FragmentManager? = null) : Fra
         return fragmentMap[p0]?.second
 
     }
-
-
     override fun getCount(): Int {
         return fragmentMap.size
     }

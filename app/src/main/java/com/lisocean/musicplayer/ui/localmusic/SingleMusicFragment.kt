@@ -19,7 +19,6 @@ import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.fragment_singlemusic.view.*
-import org.jetbrains.anko.support.v4.toast
 
 
 @Suppress("DEPRECATION")
@@ -39,20 +38,9 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
                     R.layout.item_singlemusic,
                     mViewModel.list).apply {
             itemPresenter = this@SingleMusicFragment
-//            this.onBindItem { v :View , item : SongInfo ->
-//                try {
-//                    val selectedState =  this@SingleMusicFragment.argument<String>(item.id.toString()).value
-//                    if (selectedState.isEmpty())
-//                        throw Exception("go next")
-//                    v.isSelected = selectedState.toBoolean()
-//                    //v.isSelected = selectedState
-//                }catch (e : Exception){
-//                    v.isSelected = false
-//                }
-//
-//            }
         }
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding.setVariable(BR.presenter,this)
         mBinding.executePendingBindings()

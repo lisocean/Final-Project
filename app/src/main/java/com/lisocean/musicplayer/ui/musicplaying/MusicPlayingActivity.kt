@@ -265,22 +265,7 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
             interpolator = LinearInterpolator()
         }
     }
-    /**
-     * change song and then update all view and service
-     */
-//    private fun changeSong(position : Int){
-//        //TODO => When position == -1 or size and WeakReference
-//
-//        rotateAnimation?.end()
-//        rotateAnimation = view_pager.rotate(position).apply { start() }
-//        mViewModel.position.set(position)
-//        mViewModel.playingSong.set(mViewModel.list[mViewModel.position.get()])
-//        view_pager.currentItem = mViewModel.position.get()
-//        changeBackground()
-//        mViewModel.isPlaying.set(true)
-//        mNeedleAnim.start()
-//        find<View>(R.id.playButton).isSelected = true
-//    }
+
     private fun outInvokeSong(position: Int){
         if(isNeedleStarted){
             mNeedleAnim.reverse()
@@ -288,6 +273,7 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
         }
         view_pager.currentItem = position + 1
     }
+
     private fun changeCurrentSong(position: Int){
         rotateAnimation?.end()
         rotateAnimation = view_pager.rotate(position + 1).apply { start() }
@@ -300,8 +286,9 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
         }
         find<View>(R.id.playButton).isSelected = true
     }
+
     /**
-     * chenge back ground
+     * change back ground
      */
     private fun changeBackground(){
         Glide.with(this.applicationContext)
