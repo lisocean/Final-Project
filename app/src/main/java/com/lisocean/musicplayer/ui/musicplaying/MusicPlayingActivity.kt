@@ -9,6 +9,8 @@ import android.annotation.SuppressLint
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
@@ -23,6 +25,7 @@ import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBinding
 import com.lisocean.musicplayer.helper.blur.BlurBitmapTransformtion
 import com.lisocean.musicplayer.helper.StatusBarUtil
+import com.lisocean.musicplayer.helper.utils.StringUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.service.PlayingService
 import com.lisocean.musicplayer.ui.base.BaseActivity
@@ -74,6 +77,15 @@ class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeLi
     private var rotateAnimation : ObjectAnimator? = null
 
 //    private val animatorSet by lazy { AnimatorSet() }
+private val MSG_PROGRESS = 0
+    private var handler =  @SuppressLint("HandlerLeak")
+    object : Handler(){
+        override fun handleMessage(msg: Message?) {
+            when(msg?.what){
+                MSG_PROGRESS -> updateProgress(presenter?.getProgress() ?: 0)
+            }
+        }
+    }
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,16 +108,26 @@ class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeLi
         musicSeekBar.setOnSeekBarChangeListener(this)
 
     }
+    private var progressed : Int = 0
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
+        if(!fromUser)
+            return
+        progressed = progress
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        presenter?.seekTo(progressed)
+        updateProgress(progressed)
     }
 
+    private fun updateProgress(progress: Int = 0){
+        musicSeekBar.progress = progress
+        tvCurrentTime.text = StringUtil.parseDuration(progress)
+        handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
+    }
     private var isFirst = true
     private fun initState() {
 
@@ -124,6 +146,9 @@ class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeLi
             }
         }
         musicSeekBar.max = mViewModel.playingSong.get()?.duration ?: 40000
+        tvTotalTime.text = StringUtil.parseDuration(musicSeekBar.max)
+        tvCurrentTime.text = StringUtil.parseDuration(progressed)
+        handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
 
     }
 
@@ -365,5 +390,10 @@ class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeLi
                     }
                 }
             })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 }

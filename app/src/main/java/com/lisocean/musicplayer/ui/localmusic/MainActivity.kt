@@ -142,6 +142,7 @@ class MainActivity : BaseActivity(), Presenter{
 
         if(serviceState.isPlaying) {
             mViewModel.currentSong.set(serviceState.playSongInfo)
+            find<View>(R.id.bottom_play_button).isSelected = true
         }else{
             mViewModel.currentSong.set(serviceState.playSongInfo)
             mViewModel.isPlaying.set(false)
