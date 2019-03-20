@@ -40,12 +40,13 @@ class LocalMusicViewModel(private val musicId : Int, private val repo : LocalMus
                 list.forEachWithIndex { index, it ->
                     if (musicId == it.id) {
                         currentSong.set(it)
-                        position.set(index)
-                        picUrl.set(currentSong.get()?.pictureUrl)
                     }
+
                 }
+                isPlaying.set(false)
 
             }
+
     }
     @SuppressLint("CheckResult")
     fun addDataToApp(after: (()->Unit)? = null){

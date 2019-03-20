@@ -15,13 +15,14 @@ interface Presenter {
     fun getPlayingSong() : SongInfo
     fun playPre()
     fun playNext()
+    fun getPosition() : Int
 
 
     //playing state
     fun updatePlayingState()
     fun pause()
     fun playing()
-
+    fun setOnFinishListener(listener : (song: SongInfo) -> Unit)
     //playing mode state
     fun getPlayingMode () : PlayMode
     fun setPlayingMode (mode : PlayMode)
@@ -30,4 +31,5 @@ interface Presenter {
     fun getDuration() : Int
     fun getProgress() : Int
     fun seekTo(p1 : Int)
+    fun notifyUpdateUi()
 }

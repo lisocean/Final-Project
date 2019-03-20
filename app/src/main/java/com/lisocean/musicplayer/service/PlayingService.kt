@@ -10,6 +10,7 @@ import android.os.IBinder
 import com.lisocean.musicplayer.helper.constval.Constants
 import com.lisocean.musicplayer.helper.constval.PlayMode
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.collections.forEachWithIndex
 import kotlin.random.Random
 
@@ -43,22 +44,54 @@ class PlayingService : Service() {
         mode = PlayMode.values()[sp.getInt("mode", 0)]
     }
 
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
+        intent?.let {
+            val positionTemp = it.getIntExtra("position", -1)
+            if(positionTemp != position){
+                position = positionTemp
+                list = it.getParcelableArrayListExtra<SongInfo>("list")
+            }else{
+
+            }
+        }
         return START_NOT_STICKY
     }
     //interface
     private val binder by lazy { PlayingBinder() }
     override fun onBind(intent: Intent?): IBinder? {
-        return binder
+        return binder.apply {
+            notifyUpdateUi()
+
+        }
+    }
+
+    inner class ServiceState{
+        val list = this@PlayingService.list.toList()
+        val playSongInfo = this@PlayingService.playingSong
+        val position = this@PlayingService.position
+        val isPlaying = this@PlayingService.mediaPlayer?.isPlaying ?: false
+        val process = this@PlayingService.mediaPlayer?.currentPosition ?: 0
     }
     inner class PlayingBinder :
         Binder(),
         Presenter,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
+        override fun getPosition() : Int{
+            return position
+        }
 
 
+        override fun notifyUpdateUi() {
+            EventBus.getDefault().post(ServiceState())
+        }
+
+        private var listener :((song: SongInfo) -> Unit)? = null
+        override fun setOnFinishListener(listener: (song: SongInfo) -> Unit) {
+            this.listener = listener
+        }
         override fun updateSongs(songs: List<SongInfo>) {
             list.clear()
             list.addAll(songs)
@@ -152,11 +185,13 @@ class PlayingService : Service() {
         }
 
         override fun pause() {
-            mediaPlayer?.pause()
+            if(mediaPlayer?.isPlaying == true)
+                mediaPlayer?.pause()
         }
 
         override fun playing() {
-            mediaPlayer?.start()
+            if(mediaPlayer?.isPlaying == false)
+                mediaPlayer?.start()
         }
 
         override fun getPlayingMode(): PlayMode {
@@ -183,18 +218,27 @@ class PlayingService : Service() {
         override fun onPrepared(mp: MediaPlayer?) {
             mediaPlayer?.start()
         }
-
+        private var isFirst = false
         override fun onCompletion(mp: MediaPlayer?) {
             autoPlayNext()
+            //updateUi
+
         }
 
         private fun autoPlayNext() {
+            if(list.size == 0)
+                return
+            if(!isFirst){
+                isFirst = true
+                return
+            }
             when(mode){
-                PlayMode.MODE_ALL-> position = (position + 1) % (list.size )
+                PlayMode.MODE_ALL-> position = (position + 1) % (list.size)
                 PlayMode.MODE_RANDOM -> position = Random.nextInt(list.size)
                 else -> position //无操作
             }
             playItem()
+            notifyUpdateUi()
         }
 
     }

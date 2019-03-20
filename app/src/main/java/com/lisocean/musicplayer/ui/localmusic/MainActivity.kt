@@ -3,8 +3,7 @@ package com.lisocean.musicplayer.ui.localmusic
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.databinding.DataBindingUtil
-import android.media.MediaPlayer
+import android.databinding.*
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -18,15 +17,20 @@ import com.lisocean.musicplayer.databinding.ActivityMainBinding
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.adapter.LmPagerAdapter
 import com.lisocean.musicplayer.helper.constval.Constants
-import com.lisocean.musicplayer.helper.constval.PlayMode
 import com.lisocean.musicplayer.helper.ex.argumentInt
+import com.lisocean.musicplayer.helper.ex.setArgumentInt
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import com.lisocean.musicplayer.service.PlayingService
 import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
+import org.jetbrains.anko.collections.forEachWithIndex
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -51,7 +55,7 @@ class MainActivity : BaseActivity(), Presenter{
         //binding data
         mBinding.vm = mViewModel
         mBinding.presenter = this
-
+        initObserve()
         /**
          * permission
          */
@@ -66,10 +70,85 @@ class MainActivity : BaseActivity(), Presenter{
         val adapter = LmPagerAdapter(this, supportFragmentManager)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
+
         if(presenter == null){
-            startService()
+            startService(mViewModel.list, mViewModel.position.get())
         }
 
+        EventBus.getDefault().register(this)
+    }
+    override fun onStart() {
+        super.onStart()
+        presenter?.notifyUpdateUi()
+    }
+
+
+    @Suppress("UNCHECKED_CAST")
+    private fun initObserve() {
+        mViewModel.currentSong.addOnPropertyChangedCallback(
+            object : Observable.OnPropertyChangedCallback(){
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                    sender?.let {
+                        val songInfo = it as ObservableField<SongInfo>
+                        mViewModel.picUrl.set(songInfo.get()?.pictureUrl)
+                        presenter?.playingSong(songInfo.get() ?: SongInfo())
+                        mViewModel.isPlaying.set(true)
+                        var positionTemp = -1
+                        mViewModel.list.forEachWithIndex { index, song ->
+                            if (song.id == songInfo.get()?.id)
+                                positionTemp = index
+                        }
+                        this@MainActivity.setArgumentInt(Constants.MUSIC_ID,songInfo.get()?.id ?: 0)
+                        mViewModel.position.set(positionTemp)
+                    }
+                }
+
+            })
+        mViewModel.isPlaying.addOnPropertyChangedCallback(
+            object : Observable.OnPropertyChangedCallback(){
+                override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+
+                    sender?.let {
+                        val isPlaying = it as ObservableBoolean
+                        if(isPlaying.get()){
+                            presenter?.apply {
+                                playing()
+                                find<View>(R.id.bottom_play_button).isSelected = true
+                            }
+
+                        }else{
+                            find<View>(R.id.bottom_play_button).isSelected = false
+                            presenter?.pause()
+                        }
+
+                    }
+                }
+
+            }
+        )
+    }
+
+    private var isFirst = true
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun UpdateState(serviceState: PlayingService.ServiceState){
+        if(isFirst)
+        {
+            isFirst = false
+            return
+        }
+        presenter?.setOnFinishListener {
+            mViewModel.currentSong.set(it)
+        }
+
+        if(serviceState.isPlaying) {
+            mViewModel.currentSong.set(serviceState.playSongInfo)
+        }else{
+            mViewModel.currentSong.set(serviceState.playSongInfo)
+            mViewModel.isPlaying.set(false)
+            presenter?.pause()
+        }
+
+        mViewModel.picUrl.set(serviceState.playSongInfo.pictureUrl)
     }
 
     /**
@@ -87,6 +166,7 @@ class MainActivity : BaseActivity(), Presenter{
         menuInflater.inflate(R.menu.toolbarmenu, menu)
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_search -> {
@@ -108,6 +188,7 @@ class MainActivity : BaseActivity(), Presenter{
         }
         return true
     }
+
     override fun onClick(v: View?) {
         if(presenter?.getPlayingSongs()?.size == 0){
             presenter?.updateSongs(mViewModel.list)
@@ -117,10 +198,11 @@ class MainActivity : BaseActivity(), Presenter{
         when(v?.id){
             R.id.bottom_main -> {
                 val intent = Intent(this, MusicPlayingActivity::class.java)
-                intent.putParcelableArrayListExtra("list", mViewModel.list)
-                intent.putExtra("position", mViewModel.position.get())
+                val array = arrayListOf<SongInfo>().apply{addAll(presenter?.getPlayingSongs() ?: listOf())}
+                intent.putParcelableArrayListExtra("list", array)
+                intent.putExtra("position", presenter?.getPosition())
+                intent.putExtra("isPlaying",mViewModel.isPlaying.get())
                 startActivity(intent)
-
             }
             R.id.bottom_play_button -> {
 
@@ -128,27 +210,20 @@ class MainActivity : BaseActivity(), Presenter{
                  * change player button state
                  * then change service state
                  */
-                v.isSelected = when(v.isSelected){
-                    false -> {
-                        presenter?.playing()
+                when(v.isSelected){
+                    false ->
                         mViewModel.isPlaying.set(true)
-                        true
-                    }
-                    true -> {
-                        presenter?.pause()
+                    true ->
                         mViewModel.isPlaying.set(false)
-                        false
-                    }
                 }
 
             }
             R.id.bottom_popup_more -> {
                 mViewModel.position.set(mViewModel.position.get() + 1)
                 mViewModel.currentSong.set(mViewModel.list[mViewModel.position.get()])
-                mViewModel.picUrl.set(mViewModel.currentSong.get()?.pictureUrl)
-                presenter?.playingSong(mViewModel.currentSong.get() ?: SongInfo())
             }
         }
     }
+
 
 }

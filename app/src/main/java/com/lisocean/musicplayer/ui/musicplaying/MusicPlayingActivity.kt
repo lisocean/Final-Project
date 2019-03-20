@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.SeekBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -23,12 +24,17 @@ import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBinding
 import com.lisocean.musicplayer.helper.blur.BlurBitmapTransformtion
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import com.lisocean.musicplayer.service.PlayingService
+import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.musicplaying.dependencies.RoundFragment
 import com.lisocean.musicplayer.ui.musicplaying.viewmodel.MusicPlayingViewModel
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.widget.AlbumViewPager
 import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.activity_music_playing.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -36,7 +42,8 @@ import org.koin.core.parameter.parametersOf
 import java.util.ArrayList
 
 
-class MusicPlayingActivity: AppCompatActivity(), Presenter {
+class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeListener {
+
 
     val list: ArrayList<SongInfo> by lazy {
         intent.getParcelableArrayListExtra<SongInfo>("list")
@@ -78,9 +85,46 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
         mBinding.vm = mViewModel
         mBinding.presenter = this
 
+        if(presenter == null){
+            bindService()
+        }
         initViewPager()
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
+        initState()
+        changeBackground()
+        musicSeekBar.setOnSeekBarChangeListener(this)
+
+    }
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    private var isFirst = true
+    private fun initState() {
+
+        val isPlaying = intent.getBooleanExtra("isPlaying", false)
+        mViewModel.isPlaying.set(isPlaying)
+        if(view_pager.isActivated)
+            presenter?.getPlayingSongs()
+        when(mViewModel.isPlaying.get()){
+            true ->{
+                find<View>(R.id.playButton).isSelected = true
+            }
+            false ->{
+                find<View>(R.id.playButton).isSelected = false
+                isFirst = false
+
+            }
+        }
+        musicSeekBar.max = mViewModel.playingSong.get()?.duration ?: 40000
+
     }
 
 
@@ -100,8 +144,7 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
                 return mViewModel.list.size + 2
             }
         }
-        view_pager.currentItem = mViewModel.position.get() + 1
-
+        view_pager.setCurrentItem(mViewModel.position.get() + 1, false)
         //2 3 1 origin    2 3 4 1 other pager  2 3 4 1 4 //边界
         //out invoke =>  3 4 1
         view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
@@ -196,40 +239,44 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
 
 
         })
-        changeBackground()
+
     }
 
+    private fun update(){
+        when(mViewModel.isPlaying.get()){
+            true -> {
+                find<View>(R.id.playButton).isSelected = false
+                if(isNeedleStarted){
+                    mNeedleAnim.reverse()
+                    isNeedleStarted = false
+                }
+                presenter?.pause()
+                rotateAnimation?.pause()
+                mViewModel.isPlaying.set(false)
+            }
+            false -> {
+                find<View>(R.id.playButton).isSelected = true
+                if(rotateAnimation == null)
+                {
+                    rotateAnimation = view_pager
+                        .rotate(mViewModel.position.get() + 1)
+                        .apply { start() }
+                }else
+                    rotateAnimation?.resume()
+
+                if(!isNeedleStarted){
+                    mNeedleAnim.start()
+                    isNeedleStarted = true
+                }
+                presenter?.playing()
+                mViewModel.isPlaying.set(true)
+            }
+        }
+    }
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.playButton -> {
-                when(mViewModel.isPlaying.get()){
-                    true -> {
-                        v.isSelected = false
-                        if(isNeedleStarted){
-                            mNeedleAnim.reverse()
-                            isNeedleStarted = false
-                        }
-
-                        rotateAnimation?.pause()
-                        mViewModel.isPlaying.set(false)
-                    }
-                    false -> {
-                        v.isSelected = true
-                        if(rotateAnimation == null)
-                        {
-                            rotateAnimation = view_pager
-                                .rotate(mViewModel.position.get() + 1)
-                                .apply { start() }
-                        }else
-                            rotateAnimation?.resume()
-
-                        if(!isNeedleStarted){
-                            mNeedleAnim.start()
-                            isNeedleStarted = true
-                        }
-                        mViewModel.isPlaying.set(true)
-                    }
-                }
+                update()
 
             }
             R.id.playMode -> {toast("mode")}
@@ -284,12 +331,14 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
             mNeedleAnim.start()
             isNeedleStarted = true
         }
+        presenter?.playingSong(mViewModel.list[position])
         find<View>(R.id.playButton).isSelected = true
     }
 
     /**
      * change back ground
      */
+
     private fun changeBackground(){
         Glide.with(this.applicationContext)
             .load(mViewModel.playingSong.get()?.pictureUrl)
@@ -299,6 +348,21 @@ class MusicPlayingActivity: AppCompatActivity(), Presenter {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                     rootLayout.foreground = resource
                     rootLayout.beginAnimation()
+                    if(isFirst)
+                    {
+                        if(rotateAnimation == null)
+                        {
+                            if(!isNeedleStarted){
+                                mNeedleAnim.start()
+                                isNeedleStarted = true
+                            }
+                            rotateAnimation?.end()
+                            rotateAnimation = view_pager.rotate(position + 1).apply { start() }
+                        }
+                        isFirst = false
+
+                        musicSeekBar.progress = presenter?.getProgress() ?: 0
+                    }
                 }
             })
     }

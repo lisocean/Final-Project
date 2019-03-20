@@ -1,7 +1,9 @@
 package com.lisocean.musicplayer.helper.ex
 
+import android.app.Activity
 import android.content.Context
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.lisocean.musicplayer.helper.constval.Constants
 
@@ -53,6 +55,12 @@ fun View.setArgument(key: String, data : String){
 }
 fun View.setArgumentInt(key: String, data : Int){
     context.getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
+        .edit()
+        .putInt(key, data)
+        .apply()
+}
+fun AppCompatActivity.setArgumentInt(key: String, data : Int){
+    getSharedPreferences(Constants.CONFIG_INFO, Context.MODE_PRIVATE)
         .edit()
         .putInt(key, data)
         .apply()

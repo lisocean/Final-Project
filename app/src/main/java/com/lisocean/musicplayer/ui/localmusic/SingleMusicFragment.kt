@@ -56,9 +56,7 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
     }
     override fun onItemClick(v: View?, item: SongInfo) {
         mViewModel.currentSong.set(item)
-        mViewModel.picUrl.set(item.pictureUrl)
-        mViewModel.position.set(mViewModel.list.findIndex { it.id == item.id })
-        v?.setArgumentInt(Constants.MUSIC_ID,item.id)
+
     }
 
     override fun onLikeClick(v: View?, item: SongInfo) {
