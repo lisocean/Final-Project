@@ -22,4 +22,6 @@
 
     <color name="color_lighter_gray">#ddd</color>
     <color name="color_darker_gray">#aaa</color>
+
+    <color name="color_light_black">#5000</color>
 </resources>

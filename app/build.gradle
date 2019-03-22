@@ -25,6 +25,12 @@ android {
     dataBinding{
         enabled = true
     }
+    android {
+        compileOptions {
+            sourceCompatibility 1.8
+            targetCompatibility 1.8
+        }
+    }
 
 }
 
@@ -70,4 +76,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //flexbox(Please use 1.0.0 if you haven't migrated to AndroidX.)
     implementation 'com.google.android:flexbox:1.0.0'
+    //gsyv
+    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
 }

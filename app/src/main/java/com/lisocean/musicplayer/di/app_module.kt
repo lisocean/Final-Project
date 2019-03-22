@@ -10,8 +10,10 @@ import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.local.AppDatabase
 import com.lisocean.musicplayer.model.repository.MusicPlayingRepo
 import com.lisocean.musicplayer.model.repository.MusicSearchRepo
+import com.lisocean.musicplayer.model.repository.MvSearchRepo
 import com.lisocean.musicplayer.ui.musicplaying.viewmodel.MusicPlayingViewModel
 import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
+import com.lisocean.musicplayer.ui.videoplayer.viewmodel.VideoPlayerViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -23,12 +25,14 @@ val viewModelModule =  module{
     viewModel {(id: Int) ->LocalMusicViewModel(id,get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { (list: ArrayList<SongInfo>, position: Int) -> MusicPlayingViewModel(list, position, get())}
+    viewModel { (mvid : Int) -> VideoPlayerViewModel(mvid, get())}
 }
 
 val repoModule =  module{
     single { LocalMusicRepo(get(), get(), get()) }
     single { MusicSearchRepo(get()) }
     single { MusicPlayingRepo(get()) }
+    single { MvSearchRepo(get("mvService")) }
 }
 
 val localModule =  module{

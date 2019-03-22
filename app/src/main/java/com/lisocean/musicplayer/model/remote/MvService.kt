@@ -2,6 +2,7 @@ package com.lisocean.musicplayer.model.remote
 
 import com.lisocean.musicplayer.model.data.search.MvComment
 import com.lisocean.musicplayer.model.data.search.MvDetail
+import com.lisocean.musicplayer.model.data.search.MvRelate
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,6 +16,12 @@ interface MvService {
     @GET("mv/detail")
     fun getMvDetailByMvid(@Query("mvid") mvId : Int) : Single<MvDetail>
 
+
+    /**
+     * 说明 : 调用此接口 , 传入视频 id,可获取视频播放地址
+     */
+    @GET("video/url")
+    fun getRelateDataByMvid(@Query("id") mvId : Int) : Single<MvRelate>
     /**
      * 说明 : 调用此接口 , 传入音乐 id 和 limit 参数 , 可获得该 mv 的所有评论
      * 必选参数 : id: mv id

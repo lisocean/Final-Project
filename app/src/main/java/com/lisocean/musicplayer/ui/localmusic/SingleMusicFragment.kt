@@ -1,6 +1,7 @@
 package com.lisocean.musicplayer.ui.localmusic
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -17,6 +18,7 @@ import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
+import com.lisocean.musicplayer.ui.videoplayer.VideoPlayerActivity
 import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.fragment_singlemusic.view.*
 
@@ -60,15 +62,13 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
     }
 
     override fun onLikeClick(v: View?, item: SongInfo) {
+        val intent = Intent(this.activity, VideoPlayerActivity::class.java)
+        intent.putExtra("mvid", item.mvid)
+        startActivity(intent)
 
-        v?.apply{
-            isSelected = when(isSelected){
-                true -> false
-                false -> true
-            }
 //            setArgument(item.id.toString(), isSelected.toString())
         }
-    }
+
 
     override fun onPopClick(v: View?, item: SongInfo) {
 
