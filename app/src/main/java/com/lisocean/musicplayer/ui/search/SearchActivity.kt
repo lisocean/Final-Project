@@ -2,6 +2,7 @@ package com.lisocean.musicplayer.ui.search
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
+import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.search.dependencies.SearchContract
 import com.lisocean.musicplayer.ui.search.dependencies.ViewAnimUtils
@@ -38,8 +40,12 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPresenter<SongInfo> {
-    override fun onItemClick(v: View?, item: SongInfo) {
 
+    override fun onItemClick(v: View?, item: SongInfo) {
+        val intent = Intent(this, MusicPlayingActivity::class.java)
+        intent.putExtra("list", mViewModel.songs)
+        intent.putExtra("isPlaying",false)
+        startActivity(intent)
     }
 
     /**

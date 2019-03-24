@@ -1,4 +1,4 @@
-package com.lisocean.musicplayer.ui.localmusic
+package com.lisocean.musicplayer.ui.localmusic.fragment
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_singlemusic.view.*
 
 
 @Suppress("DEPRECATION")
-class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
+class LocalMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
 
 
     private val musicId by argumentInt(Constants.MUSIC_ID)
@@ -39,7 +39,7 @@ class SingleMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
             context ?: throw Exception("activity is null"),
                     R.layout.item_singlemusic,
                     mViewModel.list).apply {
-            itemPresenter = this@SingleMusicFragment
+            itemPresenter = this@LocalMusicFragment
         }
     }
 

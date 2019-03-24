@@ -82,7 +82,7 @@ private val MSG_PROGRESS = 0
     object : Handler(){
         override fun handleMessage(msg: Message?) {
             when(msg?.what){
-                MSG_PROGRESS -> updateProgress(presenter?.getProgress() ?: 0)
+         //       MSG_PROGRESS -> updateProgress(presenter?.getProgress() ?: 0)
             }
         }
     }
@@ -96,14 +96,9 @@ private val MSG_PROGRESS = 0
         }
         mBinding.vm = mViewModel
         mBinding.presenter = this
-
-        if(presenter == null){
-            bindService()
-        }
         initViewPager()
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
-        initState()
         changeBackground()
         musicSeekBar.setOnSeekBarChangeListener(this)
 
@@ -119,7 +114,6 @@ private val MSG_PROGRESS = 0
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        presenter?.seekTo(progressed)
         updateProgress(progressed)
     }
 
@@ -128,20 +122,17 @@ private val MSG_PROGRESS = 0
         tvCurrentTime.text = StringUtil.parseDuration(progress)
         handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
     }
-    private var isFirst = true
     private fun initState() {
 
         val isPlaying = intent.getBooleanExtra("isPlaying", false)
         mViewModel.isPlaying.set(isPlaying)
         if(view_pager.isActivated)
-            presenter?.getPlayingSongs()
         when(mViewModel.isPlaying.get()){
             true ->{
                 find<View>(R.id.playButton).isSelected = true
             }
             false ->{
                 find<View>(R.id.playButton).isSelected = false
-                isFirst = false
 
             }
         }
@@ -181,7 +172,7 @@ private val MSG_PROGRESS = 0
                     isBounds = false
                     return
                 }
-//                println(4)
+                println(4)
                 if(p0 == 0 || p0 == mViewModel.list.size + 1)
                     isBounds = true
                 //change info
@@ -206,7 +197,7 @@ private val MSG_PROGRESS = 0
             override fun onPageScrollStateChanged(p0: Int) {
                 when(p0){
                     ViewPager.SCROLL_STATE_IDLE -> {
-//                        println(1)
+                        println(1)
                         when(view_pager.currentItem){
                             0 -> {
                                 view_pager.setCurrentItem(mViewModel.list.size, false)
@@ -219,7 +210,7 @@ private val MSG_PROGRESS = 0
                             }
                             mViewModel.list.size + 1 -> {
                                 view_pager.setCurrentItem(1, false)
-                                if(!isNeedleStarted){
+                                if (!isNeedleStarted) {
                                     mNeedleAnim.start()
                                     isNeedleStarted = true
                                 }
@@ -227,24 +218,11 @@ private val MSG_PROGRESS = 0
                                 rotateAnimation = view_pager.rotate(view_pager.currentItem).apply { start() }
                             }
                         }
+                        isChanged = false
 
-                        if(isChanged){
-
-                        }else{
-                            if(mViewModel.isPlaying.get())
-                            {
-                               if(!isNeedleStarted){
-                                   mNeedleAnim.start()
-                                   isNeedleStarted = true
-                               }
-                                rotateAnimation?.resume()
-                            }else{
-                                // pause state
-                            }
-                        }
                     }
                     ViewPager.SCROLL_STATE_DRAGGING -> {
-//                        println(2)
+                        println(2)
                         if(mViewModel.isPlaying.get()){
                             if(isNeedleStarted){
                                 mNeedleAnim.reverse()
@@ -254,7 +232,20 @@ private val MSG_PROGRESS = 0
                         }
                     }
                     ViewPager.SCROLL_STATE_SETTLING ->{
-//                        println(3)
+                        println(3)
+                        if(isChanged){
+                        }else{
+                            if(mViewModel.isPlaying.get())
+                            {
+                                if(!isNeedleStarted){
+                                    mNeedleAnim.start()
+                                    isNeedleStarted = true
+                                }
+                                rotateAnimation?.resume()
+                            }else{
+                                // pause state
+                            }
+                        }
                     }
                 }
             }
@@ -275,7 +266,6 @@ private val MSG_PROGRESS = 0
                     mNeedleAnim.reverse()
                     isNeedleStarted = false
                 }
-                presenter?.pause()
                 rotateAnimation?.pause()
                 mViewModel.isPlaying.set(false)
             }
@@ -293,7 +283,6 @@ private val MSG_PROGRESS = 0
                     mNeedleAnim.start()
                     isNeedleStarted = true
                 }
-                presenter?.playing()
                 mViewModel.isPlaying.set(true)
             }
         }
@@ -356,7 +345,6 @@ private val MSG_PROGRESS = 0
             mNeedleAnim.start()
             isNeedleStarted = true
         }
-        presenter?.playingSong(mViewModel.list[position])
         find<View>(R.id.playButton).isSelected = true
     }
 
@@ -373,21 +361,6 @@ private val MSG_PROGRESS = 0
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                     rootLayout.foreground = resource
                     rootLayout.beginAnimation()
-                    if(isFirst)
-                    {
-                        if(rotateAnimation == null)
-                        {
-                            if(!isNeedleStarted){
-                                mNeedleAnim.start()
-                                isNeedleStarted = true
-                            }
-                            rotateAnimation?.end()
-                            rotateAnimation = view_pager.rotate(position + 1).apply { start() }
-                        }
-                        isFirst = false
-
-                        musicSeekBar.progress = presenter?.getProgress() ?: 0
-                    }
                 }
             })
     }

@@ -5,26 +5,20 @@
         <variable name="vm"
                   type="com.lisocean.musicplayer.ui.videoplayer.viewmodel.VideoPlayerViewModel"/>
     </data>
-    <RelativeLayout
+    <com.lisocean.musicplayer.widget.BackgroundRelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            videobackground="@{vm.thumbUrl}"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
                 android:id="@+id/videoPlayer"
                 android:layout_width="match_parent"
                 videothumb="@{vm.thumbUrl}"
                 android:layout_height="250dp"
                 android:background="@color/color_black"/>
-        <ImageView
-                android:id="@+id/videoBackground"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                videobackground="@{vm.thumbUrl}"
-                android:layout_below="@id/videoPlayer"
-                tools:ignore="ContentDescription"/>
+
         <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -32,9 +26,9 @@
                 android:background="@color/color_light_black" />
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/videoPlayer_recyclerView"
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/videoPlayer"/>
-    </RelativeLayout>
+    </com.lisocean.musicplayer.widget.BackgroundRelativeLayout>
 </layout>

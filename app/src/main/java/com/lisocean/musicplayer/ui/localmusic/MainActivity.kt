@@ -70,16 +70,6 @@ class MainActivity : BaseActivity(), Presenter{
         val adapter = LmPagerAdapter(this, supportFragmentManager)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
-
-        if(presenter == null){
-            startService(mViewModel.list, mViewModel.position.get())
-        }
-
-        EventBus.getDefault().register(this)
-    }
-    override fun onStart() {
-        super.onStart()
-        presenter?.notifyUpdateUi()
     }
 
 
@@ -91,7 +81,7 @@ class MainActivity : BaseActivity(), Presenter{
                     sender?.let {
                         val songInfo = it as ObservableField<SongInfo>
                         mViewModel.picUrl.set(songInfo.get()?.pictureUrl)
-                        presenter?.playingSong(songInfo.get() ?: SongInfo())
+//                        presenter?.playingSong(songInfo.get() ?: SongInfo())
                         mViewModel.isPlaying.set(true)
                         var positionTemp = -1
                         mViewModel.list.forEachWithIndex { index, song ->
@@ -110,46 +100,13 @@ class MainActivity : BaseActivity(), Presenter{
 
                     sender?.let {
                         val isPlaying = it as ObservableBoolean
-                        if(isPlaying.get()){
-                            presenter?.apply {
-                                playing()
-                                find<View>(R.id.bottom_play_button).isSelected = true
-                            }
-
-                        }else{
-                            find<View>(R.id.bottom_play_button).isSelected = false
-                            presenter?.pause()
-                        }
+                        find<View>(R.id.bottom_play_button).isSelected = isPlaying.get()
 
                     }
                 }
 
             }
         )
-    }
-
-    private var isFirst = true
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun UpdateState(serviceState: PlayingService.ServiceState){
-        if(isFirst)
-        {
-            isFirst = false
-            return
-        }
-        presenter?.setOnFinishListener {
-            mViewModel.currentSong.set(it)
-        }
-
-        if(serviceState.isPlaying) {
-            mViewModel.currentSong.set(serviceState.playSongInfo)
-            find<View>(R.id.bottom_play_button).isSelected = true
-        }else{
-            mViewModel.currentSong.set(serviceState.playSongInfo)
-            mViewModel.isPlaying.set(false)
-            presenter?.pause()
-        }
-
-        mViewModel.picUrl.set(serviceState.playSongInfo.pictureUrl)
     }
 
     /**
@@ -191,17 +148,10 @@ class MainActivity : BaseActivity(), Presenter{
     }
 
     override fun onClick(v: View?) {
-        if(presenter?.getPlayingSongs()?.size == 0){
-            presenter?.updateSongs(mViewModel.list)
-            presenter?.playingSong(mViewModel.currentSong.get() ?: SongInfo())
-            presenter?.pause()
-        }
         when(v?.id){
             R.id.bottom_main -> {
                 val intent = Intent(this, MusicPlayingActivity::class.java)
-                val array = arrayListOf<SongInfo>().apply{addAll(presenter?.getPlayingSongs() ?: listOf())}
-                intent.putParcelableArrayListExtra("list", array)
-                intent.putExtra("position", presenter?.getPosition())
+                intent.putExtra("list", mViewModel.list)
                 intent.putExtra("isPlaying",mViewModel.isPlaying.get())
                 startActivity(intent)
             }

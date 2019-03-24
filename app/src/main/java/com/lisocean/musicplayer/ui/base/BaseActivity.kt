@@ -16,9 +16,9 @@ import org.greenrobot.eventbus.EventBus
 */
 abstract class BaseActivity : AppCompatActivity() {
 
-    protected var presenter : Presenter? = null
-        @Synchronized
-        get() = field
+//    protected var presenter : Presenter? = null
+//        @Synchronized
+//        get() = field
 
     private val conn by lazy { PlayingConnection() }
 
@@ -48,14 +48,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     inner class PlayingConnection : ServiceConnection {
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            presenter = p1 as Presenter
+       //     presenter = p1 as Presenter
         }
         override fun onServiceDisconnected(p0: ComponentName?) {
         }
     }
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(conn)
-        EventBus.getDefault().unregister(this)
     }
 }

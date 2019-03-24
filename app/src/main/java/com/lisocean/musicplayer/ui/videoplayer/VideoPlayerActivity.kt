@@ -5,21 +5,42 @@ import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ObservableField
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityVideoplayerBinding
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.model.data.search.MvDetail
+import com.lisocean.musicplayer.model.data.search.MvRelate
+import com.lisocean.musicplayer.model.data.search.VideoAddress
+import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
+import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.ui.videoplayer.viewmodel.VideoPlayerViewModel
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import kotlinx.android.synthetic.main.activity_videoplayer.*
+import org.jetbrains.anko.find
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 @Suppress("UNCHECKED_CAST")
-class VideoPlayerActivity : AppCompatActivity(){
+class VideoPlayerActivity : AppCompatActivity(), ItemClickPresenter<MvRelate.DataBean> {
+    override fun onItemClick(v: View?, item: MvRelate.DataBean) {
+        item.vid?.let{
+            if(it.length < 10)
+                mViewModel.currentId.set(it)
+            else
+            {
+                mViewModel.videoId.set(it)
+                mViewModel.thumbUrl.set(item.coverUrl)
+            }
+
+        }
+    }
 
     private val mvid : Int by lazy {
         intent.getIntExtra("mvid", -1)
@@ -30,22 +51,42 @@ class VideoPlayerActivity : AppCompatActivity(){
         DataBindingUtil.setContentView<ActivityVideoplayerBinding>(this, R.layout.activity_videoplayer)
     }
 
+    private val adapter by lazy {
+        SingleTypeAdapter<MvRelate.DataBean>(
+            this,
+            R.layout.item_video_relate,
+            mViewModel.relateDatas).apply {
+            itemPresenter = this@VideoPlayerActivity
+        }
+    }
     private var orientationUtils: OrientationUtils? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        //recyclerView
-//        videoPlayer_recyclerView.apply {
-//            layoutManager = LinearLayoutManager(context)
-//            adapter =
-//        }
+        //recyclerView
+
         mBinding.vm = mViewModel
+        initTransition()
         initVideoViewConfig()
         initCallBack()
+        find<RecyclerView>(R.id.recyclerView).apply {
+            layoutManager =  LinearLayoutManager(this@VideoPlayerActivity)
+            adapter = this@VideoPlayerActivity.adapter
+        }
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
-        StatusBarUtil.darkModeForM(window, true)
+
         StatusBarUtil.setPaddingSmart(this, videoPlayer)
 
+    }
+    private val isTransient by lazy {
+        intent.getBooleanExtra("isTransient", false)
+    }
+    private fun initTransition(){
+        if(isTransient){
+            postponeEnterTransition()
+            ViewCompat.setTransitionName(videoPlayer, "IMG_TRANSITION")
+            startPostponedEnterTransition()
+        }
     }
     //when Get the date
     private fun initCallBack() {
@@ -63,6 +104,16 @@ class VideoPlayerActivity : AppCompatActivity(){
                 }
             }
 
+        })
+        mViewModel.videoDetail.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                sender?.let {
+                    val data = it as  ObservableField<VideoAddress>
+                    val url = data.get()?.urls?.get(0)?.url ?: ""
+                    videoPlayer.setUp(url, false ,"")
+                    videoPlayer.startPlayLogic()
+                }
+            }
         })
     }
 
