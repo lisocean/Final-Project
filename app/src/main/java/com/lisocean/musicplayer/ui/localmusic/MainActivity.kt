@@ -70,6 +70,7 @@ class MainActivity : BaseActivity(), Presenter{
         val adapter = LmPagerAdapter(this, supportFragmentManager)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
+        viewPager.setCurrentItem(1 , false)
     }
 
 
@@ -131,18 +132,6 @@ class MainActivity : BaseActivity(), Presenter{
                 val options =  ActivityOptionsCompat.makeSceneTransitionAnimation(this, iv_search, getString(R.string.search_transition_name))
                 startActivity(Intent(this, SearchActivity::class.java), options.toBundle())
             }
-            R.id.menu_other -> {
-                toast("other")
-            }
-            R.id.menu_cycling -> {
-                val dialog = indeterminateProgressDialog("Synchronize the music")
-                dialog.show()
-                mViewModel.addDataToApp {
-                    dialog.cancel()
-                    toast("Synchronize successfully")
-                }
-                mViewModel.loadData()
-            }
         }
         return true
     }
@@ -151,7 +140,7 @@ class MainActivity : BaseActivity(), Presenter{
         when(v?.id){
             R.id.bottom_main -> {
                 val intent = Intent(this, MusicPlayingActivity::class.java)
-                intent.putExtra("list", mViewModel.list)
+                intent.putExtra("show_list", mViewModel.list)
                 intent.putExtra("isPlaying",mViewModel.isPlaying.get())
                 startActivity(intent)
             }

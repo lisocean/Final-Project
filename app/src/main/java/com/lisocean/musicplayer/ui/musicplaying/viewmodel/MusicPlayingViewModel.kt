@@ -9,7 +9,7 @@ import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.repository.MusicSearchRepo
 
 class MusicPlayingViewModel(listTemp : ArrayList<SongInfo>, positionTemp : Int, repo : MusicSearchRepo) : ViewModel() {
-    //playing list
+    //playing show_list
     val list = ObservableArrayList<SongInfo>()
     //current playing song
     val playingSong = ObservableField<SongInfo>()

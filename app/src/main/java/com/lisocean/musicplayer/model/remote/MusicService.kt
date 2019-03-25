@@ -2,6 +2,8 @@ package com.lisocean.musicplayer.model.remote
 
 
 import com.lisocean.musicplayer.model.data.search.*
+import com.lisocean.musicplayer.model.data.search.recommend.RdPlaylistDetail
+import com.lisocean.musicplayer.model.data.search.recommend.RdTopPlaylist
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -55,6 +57,31 @@ interface MusicService {
     @GET("comment/music")
     fun getCommentById(@Query("id")id : Int, @Query("offset") offset: Int = 0) : Single<MusicComment>
 
+    /**
+     *说明 : 调用此接口 , 可获取网友精选碟歌单
+     * 可选参数 : order: 可选值为 'new' 和 'hot', 分别对应最新和最热 , 默认为 'hot'
+     *
+     * https://music.aityp.com/top/playlist?limit=1&order=hot&cat=%E6%AC%A7%E7%BE%8E(欧美)
+     *  cat:cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从歌单分类接口获取(/playlist/catlist)
+     */
+
+    @GET("top/playlist")
+    fun RdGetTopPlaylist(@Query("limit") limit : Int = 3,
+                         @Query("cat") cat: String = "欧美",
+                         @Query("order") order: String = "hot") : Single<RdTopPlaylist>
+
+    /**
+     * 说明 : 歌单能看到歌单名字 , 但看不到具体歌单内容 , 调用此接口 , 传入歌单 id, 可
+     * 以获取对应歌单内的所有的音乐，但是返回的trackIds是完整的，tracks 则是不完整的，可
+     * 拿全部 trackIds 请求一次 song/detail 接口获取所有歌曲的详情
+     * (https://github.com/Binaryify/NeteaseCloudMusicApi/issues/452)
+     *
+     * 必选参数 : id : 歌单 id
+     * 可选参数 : s : 歌单最近的 s 个收藏者
+     *
+     */
+    @GET("playlist/detail")
+    fun RdGetPlaylistDetail(@Query("id") id :Long) : Single<RdPlaylistDetail>
 
 }
 

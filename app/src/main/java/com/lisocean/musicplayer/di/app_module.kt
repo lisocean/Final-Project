@@ -9,6 +9,7 @@ import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.local.AppDatabase
 import com.lisocean.musicplayer.model.repository.*
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.MainMvsViewModel
+import com.lisocean.musicplayer.ui.localmusic.viewmodel.RdViewModel
 import com.lisocean.musicplayer.ui.musicplaying.viewmodel.MusicPlayingViewModel
 import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
 import com.lisocean.musicplayer.ui.videoplayer.viewmodel.VideoPlayerViewModel
@@ -25,6 +26,7 @@ val viewModelModule =  module{
     viewModel { (list: ArrayList<SongInfo>, position: Int) -> MusicPlayingViewModel(list, position, get())}
     viewModel { (mvid : Int) -> VideoPlayerViewModel(mvid, get())}
     viewModel { MainMvsViewModel(get()) }
+    viewModel { RdViewModel(get()) }
 }
 
 val repoModule =  module{
@@ -33,6 +35,7 @@ val repoModule =  module{
     single { MusicPlayingRepo(get()) }
     single { MvSearchRepo(get("mvService")) }
     single { MainMvsRepo(get()) }
+    single { RdSearchRepo(get()) }
 }
 
 val localModule =  module{

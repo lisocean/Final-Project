@@ -22,7 +22,7 @@ class BlurBitmapTransformtion(val context: Context) : BitmapTransformation() {
             (DisplayUtil.getScreenWidth(context) * 1.0 / DisplayUtil.getScreenHeight(
                 context
             ) * 1.0).toFloat()
-        val cropBitmapWidth = (widthHeightSize * toTransform.height).toInt()
+//        val cropBitmapWidth = (widthHeightSize * toTransform.height).toInt()
 //        val cropBitmapWidthX = ((toTransform.width - cropBitmapWidth) / 2.0).toInt()
 //        /*切割部分图片*/
 //        val cropBitmap = Bitmap.createBitmap(

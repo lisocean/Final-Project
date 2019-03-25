@@ -7,10 +7,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.lisocean.musicplayer.model.data.search.MusicList
 import com.lisocean.musicplayer.model.data.search.SongsDetail
+import com.lisocean.musicplayer.model.data.search.recommend.RdPlaylistDetail
+import java.io.Serializable
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Entity(tableName = "songs")
 class SongInfo() : Parcelable {
+
     @PrimaryKey
     @ColumnInfo(name = "songid")
     var id : Int = -1
@@ -30,9 +33,24 @@ class SongInfo() : Parcelable {
             is MusicList.ResultBean.SongsBean -> injectFromResult(data)
             is SongsDetail.SongsBean -> injectFromDetail(data)
             is AudioMediaBean -> injectFromAudio(data)
+            is RdPlaylistDetail.PlaylistBean.TracksBean -> injectFromRdDetail(data)
             else -> throw Throwable("inject from is error")
         }
         return this
+    }
+
+    private fun injectFromRdDetail(data: RdPlaylistDetail.PlaylistBean.TracksBean) {
+        id = data.id
+        mvid = data.mv
+        name = data.name ?: ""
+        duration = data.dt
+        albumId  = data.al?.id ?: -1
+        albumname = data.al?.name ?: ""
+        data.ar?.let {
+            artists = it.joinToString(separator = "/") { art -> "${art.name}"}
+            artistsId = it.joinToString(separator = "/") { art -> "${art.id}"}
+        }
+        pictureUrl = data.al?.picUrl ?: ""
     }
 
     private fun injectFromAudio(data: AudioMediaBean){

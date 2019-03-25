@@ -4,7 +4,7 @@ import com.lisocean.musicplayer.helper.constval.PlayMode
 import com.lisocean.musicplayer.model.data.local.SongInfo
 
 interface Presenter {
-    //list
+    //show_list
     fun updateSongs(songs : List<SongInfo>)
     fun getPlayingSongs() : List<SongInfo>
     fun delSong(song : SongInfo) : Boolean

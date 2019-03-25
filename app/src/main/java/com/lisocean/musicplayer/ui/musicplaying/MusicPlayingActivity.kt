@@ -49,7 +49,7 @@ class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeLi
 
 
     val list: ArrayList<SongInfo> by lazy {
-        intent.getParcelableArrayListExtra<SongInfo>("list")
+        intent.getParcelableArrayListExtra<SongInfo>("show_list")
     }
     val position by lazy {
         intent.getIntExtra("position", 0)

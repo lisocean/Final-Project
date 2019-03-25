@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 
 class CpDatabase private constructor(private val context: Context){
     /**
-     * get content provider's music list<AudioMediaBean>
+     * get content provider's music show_list<AudioMediaBean>
      */
     private val observable =  object : Single<List<AudioMediaBean>>(){
         override fun subscribeActual(observer: SingleObserver<in List<AudioMediaBean>>) {

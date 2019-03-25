@@ -34,7 +34,7 @@ abstract class BaseActivity : AppCompatActivity() {
          */
         val intent = Intent(this,  PlayingService::class.java)
         intent.putExtra("position", position)
-        intent.putParcelableArrayListExtra("list", list)
+        intent.putParcelableArrayListExtra("show_list", list)
         bindService(intent, conn, Context.BIND_AUTO_CREATE)
         startService(intent)
     }

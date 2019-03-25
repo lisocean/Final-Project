@@ -43,9 +43,12 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
 
     override fun onItemClick(v: View?, item: SongInfo) {
         val intent = Intent(this, MusicPlayingActivity::class.java)
-        intent.putExtra("list", mViewModel.songs)
+        intent.putExtra("show_list", mViewModel.songs)
         intent.putExtra("isPlaying",false)
         startActivity(intent)
+        closeKeyBord(et_search_view, applicationContext)
+        CleanLeakUtils.fixInputMethodManagerLeak(this)
+        finish()
     }
 
     /**
@@ -82,7 +85,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
                 interpolator = DecelerateInterpolator())
         }
     }
-    val mRetryClickListener: View.OnClickListener = View.OnClickListener {
+    private val mRetryClickListener: View.OnClickListener = View.OnClickListener {
         start()
     }
 

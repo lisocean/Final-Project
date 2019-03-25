@@ -51,7 +51,7 @@ class PlayingService : Service() {
             val positionTemp = it.getIntExtra("position", -1)
             if(positionTemp != position){
                 position = positionTemp
-                list = it.getParcelableArrayListExtra<SongInfo>("list")
+                list = it.getParcelableArrayListExtra<SongInfo>("show_list")
             }else{
 
             }
@@ -118,7 +118,7 @@ class PlayingService : Service() {
         }
 
         /**
-         * @return false : Need to update list Source
+         * @return false : Need to update show_list Source
          */
         override fun playingSong(song: SongInfo) : Boolean{
             if(mediaPlayer != null){

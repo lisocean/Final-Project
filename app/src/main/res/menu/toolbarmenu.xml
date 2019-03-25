@@ -8,12 +8,5 @@
         android:icon="@drawable/ic_search"
         android:title="@string/search"
         app:showAsAction="ifRoom" />
-<item
-        android:id="@+id/menu_cycling"
-        android:title="@string/scanLocalMusic"
-        app:showAsAction="never" />
-<item
-        android:id="@+id/menu_other"
-        android:title="@string/other"
-        app:showAsAction="never" />
+
 </menu>
