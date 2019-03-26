@@ -15,8 +15,8 @@ class MusicPlayingViewModel(listTemp : List<SongInfo>, positionTemp : Int, repo 
     val playingSong = ObservableField<SongInfo>()
     //position
     val position = ObservableInt()
-    //current playing song's lyric
-    val lyric = ObservableField<String>()
+//    //current playing song's lyric
+//    val lyric = ObservableField<String>()
     //is playing
     val isPlaying = ObservableBoolean()
     init {

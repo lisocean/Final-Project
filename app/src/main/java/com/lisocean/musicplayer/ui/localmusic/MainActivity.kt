@@ -72,7 +72,7 @@ class MainActivity : BaseActivity(), Presenter{
 
 
         setSupportActionBar(toolbar)
-        val adapter = LmPagerAdapter(this, this,supportFragmentManager)
+        val adapter = LmPagerAdapter(this, supportFragmentManager)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
         viewPager.setCurrentItem(1 , false)

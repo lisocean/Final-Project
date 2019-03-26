@@ -161,7 +161,7 @@ class VideoPlayerActivity : AppCompatActivity(), ItemClickPresenter<MvRelate.Dat
                 startWindowFullscreen(this@VideoPlayerActivity, true, true)
             }
             //锁屏事件
-            setLockClickListener { view, lock ->
+            setLockClickListener { _, lock ->
                 //配合下方的onConfigurationChanged
                 orientationUtils?.isEnable = !lock
             }

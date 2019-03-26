@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.service.PlayingService
 import com.lisocean.musicplayer.service.Presenter
-import org.greenrobot.eventbus.EventBus
 
 /**
  * @use : the class with function of media service

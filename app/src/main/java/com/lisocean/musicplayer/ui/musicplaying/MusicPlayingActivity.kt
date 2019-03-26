@@ -39,9 +39,6 @@ import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.widget.AlbumViewPager
 import com.lisocean.musicplayer.widget.PlayListPopUpWindow
 import kotlinx.android.synthetic.main.activity_music_playing.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
