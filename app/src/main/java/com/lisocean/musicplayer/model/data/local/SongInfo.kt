@@ -1,5 +1,6 @@
 package com.lisocean.musicplayer.model.data.local
 
+import android.annotation.SuppressLint
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
@@ -10,9 +11,24 @@ import com.lisocean.musicplayer.model.data.search.SongsDetail
 import com.lisocean.musicplayer.model.data.search.recommend.RdPlaylistDetail
 import java.io.Serializable
 
+@SuppressLint("ParcelCreator")
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Entity(tableName = "songs")
-class SongInfo() : Parcelable {
+class SongInfo() : Parcelable ,Serializable{
+
+    companion object CREATOR : Parcelable.Creator<SongInfo> {
+
+        @JvmStatic
+        private val serialVersionUID = 545453546356356536L
+
+        override fun createFromParcel(parcel: Parcel): SongInfo {
+            return SongInfo(parcel)
+        }
+
+        override fun newArray(size: Int): Array<SongInfo?> {
+            return arrayOfNulls(size)
+        }
+    }
 
     @PrimaryKey
     @ColumnInfo(name = "songid")
@@ -123,14 +139,6 @@ class SongInfo() : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<SongInfo> {
-        override fun createFromParcel(parcel: Parcel): SongInfo {
-            return SongInfo(parcel)
-        }
 
-        override fun newArray(size: Int): Array<SongInfo?> {
-            return arrayOfNulls(size)
-        }
-    }
 
 }

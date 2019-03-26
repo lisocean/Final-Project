@@ -16,7 +16,9 @@ import com.lisocean.musicplayer.helper.constval.Constants
 import com.lisocean.musicplayer.helper.ex.*
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
+import com.lisocean.musicplayer.ui.localmusic.MainActivity
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.videoplayer.VideoPlayerActivity
 import com.lisocean.musicplayer.widget.PlayListPopUpWindow
@@ -25,7 +27,6 @@ import kotlinx.android.synthetic.main.fragment_singlemusic.view.*
 
 @Suppress("DEPRECATION")
 class LocalMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
-
 
     private val musicId by argumentInt(Constants.MUSIC_ID)
 
@@ -57,11 +58,17 @@ class LocalMusicFragment : Fragment(), ItemClickPresenter<SongInfo> {
         }
     }
     override fun onItemClick(v: View?, item: SongInfo) {
+        mViewModel.playingSongs.clear()
+        mViewModel.playingSongs.addAll(mViewModel.list)
         mViewModel.currentSong.set(item)
+        writeList(mViewModel.list)
+        writeCurrentSong(item)
+        (activity as BaseActivity).presenter.playItem()
 
     }
 
     override fun onLikeClick(v: View?, item: SongInfo) {
+        (activity as BaseActivity).presenter.pause()
         val intent = Intent(this.activity, VideoPlayerActivity::class.java)
         intent.putExtra("mvid", item.mvid)
         startActivity(intent)

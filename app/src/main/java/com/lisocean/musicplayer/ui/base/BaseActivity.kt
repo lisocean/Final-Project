@@ -16,25 +16,23 @@ import org.greenrobot.eventbus.EventBus
 */
 abstract class BaseActivity : AppCompatActivity() {
 
-//    protected var presenter : Presenter? = null
-//        @Synchronized
-//        get() = field
+    lateinit var presenter: Presenter
 
-    private val conn by lazy { PlayingConnection() }
+
+    protected val conn by lazy { PlayingConnection() }
 
 
     /***
      * start service for once
      */
-    protected fun startService(list : ArrayList<SongInfo>, position : Int){
+    protected fun startService(){
         //register eventBus
 
         /**
          * start service
          */
         val intent = Intent(this,  PlayingService::class.java)
-        intent.putExtra("position", position)
-        intent.putParcelableArrayListExtra("show_list", list)
+
         bindService(intent, conn, Context.BIND_AUTO_CREATE)
         startService(intent)
     }
@@ -46,9 +44,11 @@ abstract class BaseActivity : AppCompatActivity() {
         bindService(intent, conn, Context.BIND_AUTO_CREATE)
     }
 
+    abstract fun initWhenConn()
     inner class PlayingConnection : ServiceConnection {
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-       //     presenter = p1 as Presenter
+            presenter = p1 as Presenter
+            initWhenConn()
         }
         override fun onServiceDisconnected(p0: ComponentName?) {
         }

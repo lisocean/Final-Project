@@ -36,7 +36,7 @@ class LocalMusicRepo(private val cpLocal : CpDatabase, private val local : SongI
                 return@map array.toList()
             }
     }
-
+    fun getllMusic() = cpLocal.getCpMusic()
     fun insertAll(list:List<SongInfo>) = local.insertAll(list)
     fun insertData(songInfo: SongInfo) = local.insertSong(songInfo)
 

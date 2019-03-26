@@ -8,6 +8,10 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
+import com.lisocean.musicplayer.helper.ex.readCurrentSong
+import com.lisocean.musicplayer.helper.ex.readList
+import com.lisocean.musicplayer.helper.ex.writeCurrentSong
+import com.lisocean.musicplayer.helper.ex.writeList
 import com.lisocean.musicplayer.model.data.local.AudioMediaBean
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.repository.LocalMusicRepo
@@ -16,15 +20,22 @@ import org.jetbrains.anko.collections.forEachWithIndex
 
 class LocalMusicViewModel(private val musicId : Int, private val repo : LocalMusicRepo) : ViewModel() {
     val list = ObservableArrayList<SongInfo>()
+
+    val localAudioList = mutableListOf<AudioMediaBean>()
+    val localAppList = arrayListOf<SongInfo>()
+
+    val playingSongs = ObservableArrayList<SongInfo>()
     val isPlaying = ObservableBoolean()
+    val position = ObservableInt()
     val currentSong = ObservableField<SongInfo>()
     val picUrl = ObservableField<String>()
-    val position = ObservableInt()
-
-    val localAudioList = arrayListOf<AudioMediaBean>()
-    val localAppList = arrayListOf<SongInfo>()
     init {
         loadData()
+        try {
+            playingSongs.addAll(readList())
+            currentSong.set(readCurrentSong())
+            picUrl.set(currentSong.get()?.pictureUrl)
+        }catch (e : Throwable){ }
     }
 
     @SuppressLint("CheckResult")
@@ -36,16 +47,9 @@ class LocalMusicViewModel(private val musicId : Int, private val repo : LocalMus
 
                 list.clear()
                 list.addAll(t1)
-
-                list.forEachWithIndex { index, it ->
-                    if (musicId == it.id) {
-                        currentSong.set(it)
-                    }
-
-                }
                 isPlaying.set(false)
-
             }
+
 
     }
     @SuppressLint("CheckResult")
@@ -70,22 +74,22 @@ class LocalMusicViewModel(private val musicId : Int, private val repo : LocalMus
                 }
             }
     }
-//    @SuppressLint("CheckResult")
-//    fun scanCpMusic(){
-//        repo.getLocalMusic().subscribe { t1, t2 ->
-//            if (t2 != null)
-//                println(t2)
-//            localAudioList.clear()
-//            localAudioList.addAll(t1)
-//            localAppList.forEach {songInfo->
-//                localAudioList.forEach { cPmusic->
-//                    if(songInfo.name == cPmusic.title && songInfo.artists == cPmusic.artist){
-//                        localAudioList.remove(cPmusic)
-//                    }
-//                }
-//            }
-//            //TODO add to view
-//        }
-//    }
+    @SuppressLint("CheckResult")
+    fun scanCpMusic(){
+        repo.getllMusic().subscribe { t1, t2 ->
+            if (t2 != null)
+                println(t2)
+            localAudioList.clear()
+            localAudioList.addAll(t1)
+            localAppList.forEach {songInfo->
+                localAudioList.forEach { cPmusic->
+                    if(songInfo.name == cPmusic.title && songInfo.artists == cPmusic.artist){
+                        localAudioList.remove(cPmusic)
+                    }
+                }
+            }
+            addDataToApp()
+        }
+    }
 
 }

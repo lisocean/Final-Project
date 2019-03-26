@@ -8,7 +8,7 @@ import android.databinding.ObservableInt
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.model.repository.MusicSearchRepo
 
-class MusicPlayingViewModel(listTemp : ArrayList<SongInfo>, positionTemp : Int, repo : MusicSearchRepo) : ViewModel() {
+class MusicPlayingViewModel(listTemp : List<SongInfo>, positionTemp : Int, repo : MusicSearchRepo) : ViewModel() {
     //playing show_list
     val list = ObservableArrayList<SongInfo>()
     //current playing song
@@ -25,7 +25,6 @@ class MusicPlayingViewModel(listTemp : ArrayList<SongInfo>, positionTemp : Int, 
         position.set(positionTemp)
         playingSong.set(list[position.get()])
         isPlaying.set(false)
-        listTemp.clear()
     }
 
 }

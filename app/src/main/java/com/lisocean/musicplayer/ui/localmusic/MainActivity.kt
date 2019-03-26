@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.databinding.*
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
@@ -17,18 +18,14 @@ import com.lisocean.musicplayer.databinding.ActivityMainBinding
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.adapter.LmPagerAdapter
 import com.lisocean.musicplayer.helper.constval.Constants
-import com.lisocean.musicplayer.helper.ex.argumentInt
-import com.lisocean.musicplayer.helper.ex.setArgumentInt
+import com.lisocean.musicplayer.helper.ex.*
+import com.lisocean.musicplayer.helper.utils.FileUtils
 import com.lisocean.musicplayer.model.data.local.SongInfo
-import com.lisocean.musicplayer.service.PlayingService
 import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
 import com.lisocean.musicplayer.ui.presenter.Presenter
 import com.lisocean.musicplayer.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
 import org.jetbrains.anko.collections.forEachWithIndex
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -37,6 +34,12 @@ import org.koin.core.parameter.parametersOf
 
 @Suppress("DEPRECATION")
 class MainActivity : BaseActivity(), Presenter{
+
+    override fun initWhenConn() {
+        presenter.setOnFinishListener {
+            mViewModel.currentSong.set(readCurrentSong())
+        }
+    }
 
 
     /**
@@ -56,23 +59,39 @@ class MainActivity : BaseActivity(), Presenter{
         mBinding.vm = mViewModel
         mBinding.presenter = this
         initObserve()
+        startService()
         /**
          * permission
          */
-        val checkSelfPermission = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+        val checkSelfPermission = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if(checkSelfPermission != PackageManager.PERMISSION_GRANTED)
         {
-            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             requestPermissions(permissions,1)
         }
 
+
         setSupportActionBar(toolbar)
-        val adapter = LmPagerAdapter(this, supportFragmentManager)
+        val adapter = LmPagerAdapter(this, this,supportFragmentManager)
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
         viewPager.setCurrentItem(1 , false)
+        toolbar.setNavigationOnClickListener { mViewModel.scanCpMusic() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        mViewModel.playingSongs.clear()
+        mViewModel.playingSongs.addAll(readList())
+        mViewModel.currentSong.set(readCurrentSong())
+        com.lisocean.musicplayer.helper.ex.run {
+            if(presenter.isPlaying())
+                mViewModel.isPlaying.set(true)
+            else
+                mViewModel.isPlaying.set(false)
+        }
+
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun initObserve() {
@@ -85,11 +104,11 @@ class MainActivity : BaseActivity(), Presenter{
 //                        presenter?.playingSong(songInfo.get() ?: SongInfo())
                         mViewModel.isPlaying.set(true)
                         var positionTemp = -1
-                        mViewModel.list.forEachWithIndex { index, song ->
+                        mViewModel.playingSongs.forEachWithIndex { index, song ->
                             if (song.id == songInfo.get()?.id)
                                 positionTemp = index
                         }
-                        this@MainActivity.setArgumentInt(Constants.MUSIC_ID,songInfo.get()?.id ?: 0)
+//                        this@MainActivity.setArgumentInt(Constants.MUSIC_ID,songInfo.get()?.id ?: 0)
                         mViewModel.position.set(positionTemp)
                     }
                 }
@@ -117,6 +136,10 @@ class MainActivity : BaseActivity(), Presenter{
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
             mViewModel.loadData()
         }
+        if(grantResults[1] == PackageManager.PERMISSION_GRANTED){
+            FileUtils.createDir(Environment.getExternalStorageDirectory().absolutePath + "/com/lisocean/cache/")
+
+        }
     }
     /**
      * be of toolbar
@@ -140,7 +163,6 @@ class MainActivity : BaseActivity(), Presenter{
         when(v?.id){
             R.id.bottom_main -> {
                 val intent = Intent(this, MusicPlayingActivity::class.java)
-                intent.putExtra("show_list", mViewModel.list)
                 intent.putExtra("isPlaying",mViewModel.isPlaying.get())
                 startActivity(intent)
             }
@@ -151,19 +173,31 @@ class MainActivity : BaseActivity(), Presenter{
                  * then change service state
                  */
                 when(v.isSelected){
-                    false ->
+                    false ->{
                         mViewModel.isPlaying.set(true)
-                    true ->
-                        mViewModel.isPlaying.set(false)
-                }
+                        presenter.playing()
+                    }
 
+                    true ->
+                    {
+                        mViewModel.isPlaying.set(false)
+                        presenter.pause()
+                    }
+
+                }
             }
             R.id.bottom_popup_more -> {
                 mViewModel.position.set(mViewModel.position.get() + 1)
-                mViewModel.currentSong.set(mViewModel.list[mViewModel.position.get()])
+                mViewModel.currentSong.set(mViewModel.playingSongs[mViewModel.position.get()])
+                writeCurrentSong(mViewModel.currentSong.get() ?: SongInfo())
+                presenter.playNext()
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(conn)
+    }
 
 }

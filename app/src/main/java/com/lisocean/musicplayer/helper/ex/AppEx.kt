@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.lisocean.musicplayer.helper.ex
 
 import android.app.Activity
@@ -6,6 +8,11 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.lisocean.musicplayer.helper.constval.Constants
+import com.lisocean.musicplayer.model.data.local.SongInfo
+import java.io.*
+import java.util.Arrays.asList
+
+
 
 /**
  *  获取参数配置信息
@@ -72,3 +79,63 @@ inline fun <reified T> Iterable<T>.findIndex(predicate: (T) -> Boolean): Int{
     }
     return -1
 }
+fun writeList(list : List<SongInfo>){
+    val file = File(Constants.path)
+    val out = ObjectOutputStream(FileOutputStream(file))
+    try {
+        out.writeObject(list.toTypedArray())
+    }catch (e : Throwable){
+        println(e)
+    }finally {
+        out.close()
+    }
+}
+fun readList() : List<SongInfo>{
+    val arrayList = arrayListOf<SongInfo>()
+    run {
+        val file = File(Constants.path)
+        val out = ObjectInputStream(FileInputStream(file))
+
+        try {
+            val list = out.readObject() as Array<SongInfo>
+            arrayList.addAll(list)
+        }catch (e : Throwable){
+            println(e)
+        }finally {
+            out.close()
+        }
+    }
+
+    return arrayList.toList()
+}
+fun writeCurrentSong(currentSong : SongInfo){
+    val file = File(Constants.currentSongPath)
+    val out = ObjectOutputStream(FileOutputStream(file))
+    try {
+        out.writeObject(currentSong)
+    }catch (e : Throwable){
+        println(e)
+    }finally {
+        out.close()
+    }
+}
+fun readCurrentSong() : SongInfo{
+    var currentSong = SongInfo()
+    run {
+        val file = File(Constants.currentSongPath)
+        val out = ObjectInputStream(FileInputStream(file))
+        try {
+            val song = out.readObject() as SongInfo
+            currentSong = song
+        }catch (e : Throwable){
+            println(e)
+        }finally {
+            out.close()
+        }
+    }
+    return currentSong
+}
+fun run(func : () -> Unit) {try {
+    func.invoke()
+}catch (e : Throwable){}}
+

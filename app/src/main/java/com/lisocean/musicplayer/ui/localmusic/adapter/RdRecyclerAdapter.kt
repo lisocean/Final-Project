@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.RdViewModel
 import com.lisocean.musicplayer.widget.ItemRdAllView
 
-class RdRecyclerAdapter(val viewModel : LocalMusicViewModel,
+class RdRecyclerAdapter(val activity : BaseActivity,
+                        val viewModel : LocalMusicViewModel,
                         val mViewModel : RdViewModel,
                         val show_list : List<ObservableArrayList<SongInfo>>,
                         val list : List<ArrayList<SongInfo>>
@@ -18,7 +20,7 @@ class RdRecyclerAdapter(val viewModel : LocalMusicViewModel,
     private var i = -1
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): Holder {
         i += 1
-        return Holder(ItemRdAllView(viewModel, mViewModel ,show_list[i] , list[i], p0.context))
+        return Holder(ItemRdAllView(activity ,viewModel, mViewModel ,show_list[i] , list[i], p0.context))
     }
 
     override fun getItemCount(): Int {

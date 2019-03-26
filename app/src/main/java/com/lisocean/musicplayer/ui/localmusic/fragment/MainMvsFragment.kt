@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_main_mvs.view.*
 import org.jetbrains.anko.find
 import org.koin.android.viewmodel.ext.android.viewModel
 import android.support.v4.util.Pair
+import com.lisocean.musicplayer.ui.base.BaseActivity
 
 class MainMvsFragment : Fragment() , ItemClickPresenter<MainMvs.DataBean> {
     private val mViewModel by viewModel<MainMvsViewModel>()
@@ -51,6 +52,7 @@ class MainMvsFragment : Fragment() , ItemClickPresenter<MainMvs.DataBean> {
     }
 
     override fun onItemClick(v: View?, item: MainMvs.DataBean) {
+        (activity as BaseActivity).presenter.pause()
         val intent = Intent(this.context, VideoPlayerActivity::class.java)
         intent.putExtra("mvid", item.id)
         intent.putExtra("isTransient", true)

@@ -22,7 +22,8 @@ interface Presenter {
     fun updatePlayingState()
     fun pause()
     fun playing()
-    fun setOnFinishListener(listener : (song: SongInfo) -> Unit)
+    fun isPlaying() :Boolean
+    fun setOnFinishListener(listener : () -> Unit)
     //playing mode state
     fun getPlayingMode () : PlayMode
     fun setPlayingMode (mode : PlayMode)
@@ -31,5 +32,5 @@ interface Presenter {
     fun getDuration() : Int
     fun getProgress() : Int
     fun seekTo(p1 : Int)
-    fun notifyUpdateUi()
+
 }

@@ -26,6 +26,8 @@ import com.lisocean.musicplayer.extension.MultipleStatusView
 import com.lisocean.musicplayer.helper.utils.CleanLeakUtils
 import com.lisocean.musicplayer.helper.constval.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil
+import com.lisocean.musicplayer.helper.ex.writeCurrentSong
+import com.lisocean.musicplayer.helper.ex.writeList
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
@@ -42,9 +44,10 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPresenter<SongInfo> {
 
     override fun onItemClick(v: View?, item: SongInfo) {
+        writeList(mViewModel.songs)
+        writeCurrentSong(item)
         val intent = Intent(this, MusicPlayingActivity::class.java)
-        intent.putExtra("show_list", mViewModel.songs)
-        intent.putExtra("isPlaying",false)
+        intent.putExtra("isfrom",true)
         startActivity(intent)
         closeKeyBord(et_search_view, applicationContext)
         CleanLeakUtils.fixInputMethodManagerLeak(this)

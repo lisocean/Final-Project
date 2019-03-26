@@ -10,7 +10,10 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import com.lisocean.musicplayer.R
+import com.lisocean.musicplayer.helper.ex.writeCurrentSong
+import com.lisocean.musicplayer.helper.ex.writeList
 import com.lisocean.musicplayer.model.data.local.SongInfo
+import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.RdViewModel
@@ -20,6 +23,7 @@ import kotlinx.android.synthetic.main.item_recommend_all.view.*
 
 @SuppressLint("ViewConstructor")
 class ItemRdAllView @JvmOverloads constructor(
+    private val activity: BaseActivity,
     private val viewModel : LocalMusicViewModel,
     private val mViewModel : RdViewModel,
     val show_list : ObservableArrayList<SongInfo>,
@@ -81,12 +85,19 @@ class ItemRdAllView @JvmOverloads constructor(
     }
 
     override fun onItemClick(v: View?, item: SongInfo) {
+        viewModel.playingSongs.clear()
+        viewModel.playingSongs.addAll(list)
+        writeList(list)
+        writeCurrentSong(item)
         viewModel.currentSong.set(item)
+        activity.presenter.playItem()
     }
     override fun onLikeClick(v: View?, item: SongInfo) {
+        activity.presenter.pause()
         val intent = Intent(context, VideoPlayerActivity::class.java)
         intent.putExtra("mvid", item.mvid)
         startActivity(context ,intent, null)
+
     }
 
     override fun onPopClick(v: View?, item: SongInfo) {

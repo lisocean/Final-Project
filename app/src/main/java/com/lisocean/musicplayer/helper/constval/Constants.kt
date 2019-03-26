@@ -1,5 +1,7 @@
 package com.lisocean.musicplayer.helper.constval
 
+import android.os.Environment
+
 object Constants {
     val HOST_API = "https://music.aityp.com/"
     /**
@@ -18,6 +20,11 @@ object Constants {
     const val  MUSIC_ID : String = "musicidtokeep"
 
     const val MUSIC_PLAYER_MODE : String = "musicplayermode"
+    /**
+     * cache
+     */
+    val path = Environment.getExternalStorageDirectory().absolutePath + "/Android/data/app/com.lisocean.musicplayer/cached/listCache.x"
+    val currentSongPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/data/app/com.lisocean.musicplayer/cached/currentSongCache.x"
 
 
 }

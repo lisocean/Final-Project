@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -25,6 +26,9 @@ import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBinding
 import com.lisocean.musicplayer.helper.blur.BlurBitmapTransformtion
 import com.lisocean.musicplayer.helper.StatusBarUtil
+import com.lisocean.musicplayer.helper.ex.readCurrentSong
+import com.lisocean.musicplayer.helper.ex.readList
+import com.lisocean.musicplayer.helper.ex.writeCurrentSong
 import com.lisocean.musicplayer.helper.utils.StringUtil
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.service.PlayingService
@@ -38,6 +42,7 @@ import kotlinx.android.synthetic.main.activity_music_playing.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -46,13 +51,49 @@ import java.util.ArrayList
 
 
 class MusicPlayingActivity: BaseActivity(), Presenter, SeekBar.OnSeekBarChangeListener {
+    override fun initWhenConn() {
+        find<View>(R.id.playButton).isSelected = true
+        if(rotateAnimation == null)
+        {
+            rotateAnimation = view_pager
+                .rotate(mViewModel.position.get() + 1)
+                .apply { start() }
+        }else
+            rotateAnimation?.resume()
+
+        if(!isNeedleStarted){
+            mNeedleAnim.start()
+            isNeedleStarted = true
+        }
+        mViewModel.isPlaying.set(true)
+        if(presenter.isPlaying()){
+
+        }else{
+            presenter.playItem()
+        }
+        presenter.setOnFinishListener {
+            outInvokeSong(mViewModel.position.get() + 1)
+            musicSeekBar.max = readCurrentSong().duration
+            tvTotalTime.text = StringUtil.parseDuration(musicSeekBar.max)
+        }
+        initState()
+        val isFrom = intent.getBooleanExtra("isfrom",false)
+        if(isFrom)
+            presenter.playItem()
+    }
 
 
-    val list: ArrayList<SongInfo> by lazy {
-        intent.getParcelableArrayListExtra<SongInfo>("show_list")
+    val list: List<SongInfo> by lazy {
+        readList()
     }
     val position by lazy {
-        intent.getIntExtra("position", 0)
+        var i = -1
+        val id = readCurrentSong().id
+        list.forEachWithIndex { index , it ->
+            if(it.id == id)
+                i = index
+        }
+        i
     }
     private val mViewModel
             by viewModel<MusicPlayingViewModel> { parametersOf(list, position) }
@@ -82,7 +123,7 @@ private val MSG_PROGRESS = 0
     object : Handler(){
         override fun handleMessage(msg: Message?) {
             when(msg?.what){
-         //       MSG_PROGRESS -> updateProgress(presenter?.getProgress() ?: 0)
+                MSG_PROGRESS -> updateProgress(presenter.getProgress())
             }
         }
     }
@@ -97,10 +138,14 @@ private val MSG_PROGRESS = 0
         mBinding.vm = mViewModel
         mBinding.presenter = this
         initViewPager()
+        bindService()
         //状态栏透明和间距处理
         StatusBarUtil.darkMode(this)
         changeBackground()
         musicSeekBar.setOnSeekBarChangeListener(this)
+        toolBar.setNavigationOnClickListener {
+            finish()
+        }
 
     }
     private var progressed : Int = 0
@@ -111,10 +156,12 @@ private val MSG_PROGRESS = 0
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         updateProgress(progressed)
+        presenter.seekTo(progressed)
     }
 
     private fun updateProgress(progress: Int = 0){
@@ -124,19 +171,7 @@ private val MSG_PROGRESS = 0
     }
     private fun initState() {
 
-        val isPlaying = intent.getBooleanExtra("isPlaying", false)
-        mViewModel.isPlaying.set(isPlaying)
-        if(view_pager.isActivated)
-        when(mViewModel.isPlaying.get()){
-            true ->{
-                find<View>(R.id.playButton).isSelected = true
-            }
-            false ->{
-                find<View>(R.id.playButton).isSelected = false
-
-            }
-        }
-        musicSeekBar.max = mViewModel.playingSong.get()?.duration ?: 40000
+        musicSeekBar.max = readCurrentSong().duration
         tvTotalTime.text = StringUtil.parseDuration(musicSeekBar.max)
         tvCurrentTime.text = StringUtil.parseDuration(progressed)
         handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
@@ -268,6 +303,8 @@ private val MSG_PROGRESS = 0
                 }
                 rotateAnimation?.pause()
                 mViewModel.isPlaying.set(false)
+                presenter.pause()
+
             }
             false -> {
                 find<View>(R.id.playButton).isSelected = true
@@ -284,6 +321,7 @@ private val MSG_PROGRESS = 0
                     isNeedleStarted = true
                 }
                 mViewModel.isPlaying.set(true)
+                presenter.playing()
             }
         }
     }
@@ -346,6 +384,8 @@ private val MSG_PROGRESS = 0
             isNeedleStarted = true
         }
         find<View>(R.id.playButton).isSelected = true
+        writeCurrentSong(mViewModel.playingSong.get() ?: SongInfo())
+        presenter.playItem()
     }
 
     /**
@@ -367,6 +407,7 @@ private val MSG_PROGRESS = 0
 
     override fun onDestroy() {
         super.onDestroy()
+        unbindService(conn)
         handler.removeCallbacksAndMessages(null)
     }
 }

@@ -186,7 +186,7 @@
             <TextView
                     android:id="@+id/tvTotalTime"
                     android:layout_marginEnd="15dp"
-                    android:layout_width="30dp"
+                    android:layout_width="35dp"
                     android:text="05:34"
                     android:layout_alignParentEnd="true"
                     style="@style/neteasa_music_time_text_sytle"

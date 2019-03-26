@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.lisocean.musicplayer.BR
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.FragmentRdBinding
+import com.lisocean.musicplayer.ui.base.BaseActivity
 import com.lisocean.musicplayer.ui.localmusic.adapter.RdRecyclerAdapter
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.LocalMusicViewModel
 import com.lisocean.musicplayer.ui.localmusic.viewmodel.RdViewModel
@@ -33,7 +34,7 @@ class RecommendFragment : Fragment()  {
         return mBinding.root.apply {
             singleMusicRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
-                adapter = RdRecyclerAdapter(localMusicViewModel, mViewModel ,mViewModel.show_list , mViewModel.list)
+                adapter = RdRecyclerAdapter((activity as BaseActivity) ,localMusicViewModel, mViewModel ,mViewModel.show_list , mViewModel.list)
             }
         }
     }
