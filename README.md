@@ -16,15 +16,12 @@ This is a music player using the MVVM(view--viewmodel--model), Network Api comes
 * EventBus
 * Glide
 * Flexbox
+* GSYVideoPlayer
 
 ## Reference : Ui effect
 * [PaoNet](https://github.com/ditclear/PaoNet) -> RecyclerView's Base Activity
 * [KotlinMvp](https://github.com/git-xuhao/KotlinMvp) -> Search Activity Transition Animation
 
-## TODO => Apply : 
-* Ijkplayer
-
-* And so on
 
 ## Local Load Strategy
 Content Providers, App DataBase(playTime >= 60s)to get local music. 
@@ -35,6 +32,8 @@ src="display/demo2.jpg" alt="screenshot" title="screenshot" width="216"  height=
 <img src="display/demo3.jpg" alt="screenshot" title="screenshot" width="216" height="384"> <img 
 src="display/demo4.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
 <img src="display/demo5.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
-<img src="display/demo6.jpg" alt="screenshot" title="screenshot" width="216"  height="384"><img 
+<img src="display/demo6.jpg" alt="screenshot" title="screenshot" width="216"  height="384"> <img 
 src="display/demo7.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
+<img src="display/demo8.jpg" alt="screenshot" title="screenshot" width="216"  height="384"> <img 
+src="display/demo9.jpg" alt="screenshot" title="screenshot" width="216"  height="384">
 
