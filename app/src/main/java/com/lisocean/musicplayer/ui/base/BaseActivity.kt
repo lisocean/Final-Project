@@ -52,7 +52,5 @@ abstract class BaseActivity : AppCompatActivity() {
         override fun onServiceDisconnected(p0: ComponentName?) {
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
 }

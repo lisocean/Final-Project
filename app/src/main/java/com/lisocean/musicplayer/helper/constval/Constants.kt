@@ -3,7 +3,7 @@ package com.lisocean.musicplayer.helper.constval
 import android.os.Environment
 
 object Constants {
-    val HOST_API = "https://music.aityp.com/"
+    val HOST_API = "http://148.70.143.105:3000/"
     /**
      * 将 https://music.163.com/song/media/outer/url?id=id.mp3 以 src 赋予 Audio 即可播放
      * 必选参数 : id : 音乐 id

@@ -22,7 +22,7 @@ import android.widget.TextView
 import com.google.android.flexbox.*
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivitySearchBinding
-import com.lisocean.musicplayer.extension.MultipleStatusView
+import com.lisocean.musicplayer.helper.extension.MultipleStatusView
 import com.lisocean.musicplayer.helper.utils.CleanLeakUtils
 import com.lisocean.musicplayer.helper.constval.ErrorStatus
 import com.lisocean.musicplayer.helper.StatusBarUtil

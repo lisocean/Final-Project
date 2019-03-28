@@ -18,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class NetUnitTest {
     /**
+     * .baseUrl("https://music.aityp.com/")
      * all function test passed
      */
 
@@ -25,7 +26,7 @@ class NetUnitTest {
 
     private val search by lazy {
         Retrofit.Builder()
-            .baseUrl("https://music.aityp.com/")
+            .baseUrl("http://192.168.43.101:3000/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

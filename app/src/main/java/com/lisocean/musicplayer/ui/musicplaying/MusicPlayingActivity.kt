@@ -8,6 +8,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.databinding.ViewDataBinding
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
@@ -24,6 +25,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.lisocean.musicplayer.R
 import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBinding
+import com.lisocean.musicplayer.databinding.ActivityMusicPlayingBindingImpl
 import com.lisocean.musicplayer.helper.blur.BlurBitmapTransformtion
 import com.lisocean.musicplayer.helper.StatusBarUtil
 import com.lisocean.musicplayer.helper.ex.readCurrentSong
@@ -225,7 +227,6 @@ private val MSG_PROGRESS = 0
                 }
 
             }
-
             override fun onPageScrollStateChanged(p0: Int) {
                 when(p0){
                     ViewPager.SCROLL_STATE_IDLE -> {

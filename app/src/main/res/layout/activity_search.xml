@@ -128,7 +128,7 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                <com.lisocean.musicplayer.extension.MultipleStatusView
+                <com.lisocean.musicplayer.helper.extension.MultipleStatusView
                         android:id="@+id/multipleStatusView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -141,7 +141,7 @@
                             android:id="@+id/mRecyclerView_result"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
-                </com.lisocean.musicplayer.extension.MultipleStatusView>
+                </com.lisocean.musicplayer.helper.extension.MultipleStatusView>
             </LinearLayout>
 
         </LinearLayout>

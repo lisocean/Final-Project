@@ -29,7 +29,6 @@ class SongInfo() : Parcelable ,Serializable{
             return arrayOfNulls(size)
         }
     }
-
     @PrimaryKey
     @ColumnInfo(name = "songid")
     var id : Int = -1
