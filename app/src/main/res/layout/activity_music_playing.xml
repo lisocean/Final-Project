@@ -67,8 +67,8 @@
 
                 <ImageView
                         android:id="@+id/needle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="120dp"
+                        android:layout_height="150dp"
                         android:layout_alignParentEnd="true"
                         android:layout_below="@id/view_line"
                         android:layout_marginEnd="100dp"

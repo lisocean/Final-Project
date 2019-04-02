@@ -62,6 +62,7 @@ class ItemRdAllView @JvmOverloads constructor(
         recommend_text.setOnClickListener {
             initData()
         }
+
     }
 
     private fun initData() {

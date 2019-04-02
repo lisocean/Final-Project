@@ -371,7 +371,7 @@ private val MSG_PROGRESS = 0
         view_pager.currentItem = position + 1
     }
 
-    private fun changeCurrentSong(position: Int){
+    public fun changeCurrentSong(position: Int){
         rotateAnimation?.end()
         rotateAnimation = view_pager.rotate(position + 1).apply { start() }
         mViewModel.playingSong.set(mViewModel.list[mViewModel.position.get()])
@@ -384,6 +384,7 @@ private val MSG_PROGRESS = 0
         find<View>(R.id.playButton).isSelected = true
         writeCurrentSong(mViewModel.playingSong.get() ?: SongInfo())
         presenter.playItem()
+        initState()
     }
 
     /**

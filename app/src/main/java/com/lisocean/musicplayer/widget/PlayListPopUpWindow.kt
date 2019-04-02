@@ -12,18 +12,30 @@ import android.view.*
 import android.view.animation.DecelerateInterpolator
 import android.widget.PopupWindow
 import com.lisocean.musicplayer.R
+import com.lisocean.musicplayer.helper.ex.readCurrentSong
+import com.lisocean.musicplayer.helper.ex.readList
+import com.lisocean.musicplayer.helper.ex.writeCurrentSong
+import com.lisocean.musicplayer.helper.ex.writeList
 import com.lisocean.musicplayer.model.data.local.SongInfo
 import com.lisocean.musicplayer.ui.base.adapter.SingleTypeAdapter
 import com.lisocean.musicplayer.ui.base.adapter.animators.ScaleInItemAnimator
+import com.lisocean.musicplayer.ui.musicplaying.MusicPlayingActivity
 import com.lisocean.musicplayer.ui.presenter.ItemClickPresenter
+import kotlinx.android.synthetic.main.activity_music_playing.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.linearLayout
 
-class PlayListPopUpWindow (private val window : Window, context : Context, listTemp: List<SongInfo>) : PopupWindow(),
+class PlayListPopUpWindow (private val window : Window,private val context : Context, listTemp: List<SongInfo>) : PopupWindow(),
     ItemClickPresenter<SongInfo> {
     override fun onItemClick(v: View?, item: SongInfo) {
         when(v?.id){
-
+            R.id.item_sd ->{
+                if(context is MusicPlayingActivity){
+                    val position = list.indexOf(item)
+                    context.view_pager.setCurrentItem(position + 1, false)
+                    context.changeCurrentSong(position)
+                }
+            }
         }
     }
 
@@ -64,7 +76,7 @@ class PlayListPopUpWindow (private val window : Window, context : Context, listT
             layoutManager = LinearLayoutManager(context)
             adapter = this@PlayListPopUpWindow.adapter
         }
-        contentView.find<View>(R.id.del_all)
+
 
     }
 

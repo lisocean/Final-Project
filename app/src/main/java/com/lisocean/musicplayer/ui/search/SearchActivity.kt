@@ -37,6 +37,7 @@ import com.lisocean.musicplayer.ui.search.dependencies.SearchContract
 import com.lisocean.musicplayer.ui.search.dependencies.ViewAnimUtils
 import com.lisocean.musicplayer.ui.search.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
+import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -79,6 +80,7 @@ class SearchActivity : AppCompatActivity(),  SearchContract.View, ItemClickPrese
             onBindItem { v, item ->
                 v.setOnClickListener {
                     mViewModel.text.set(item)
+                    closeSoftKeyboard()
                     start()
                 }
             }
